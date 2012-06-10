@@ -424,11 +424,6 @@ class UserManager implements RestInterfaceClasses
 	trigger_error ( 'User Manager $locator must be an instanceof \Zend\Di' , E_USER_ERROR ) ;
     }
 
-    protected function getDbTable ()
-    {
-	return  $this->getLocator ()->get ( 'db-adapter' ) ;
-    }
-
     protected function generatePassword ( $length = 9 , $strength = 0 )
     {
 	$vowels = 'aeuy' ;

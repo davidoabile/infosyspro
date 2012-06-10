@@ -1,22 +1,38 @@
 <?php
+/**
+ * InfosysPro
+ *
+ * LICENSE
+ *
+ * This source file is subject to the Infosyspro license that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://infosyspro.com.au/license/software
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to support@infosyspro.com so we can send you a copy immediately.
+ *
+ * @category   Module
+ * @package    Application_Module
+ * @subpackage Module
+ * @copyright  Copyright (c) 2009-2012 Infosyspro. (http://www.infosyspro.com.au)
+ * @license    http://infosyspro.com.au/license/software     PRIVATE License
+ */
 
 namespace Application;
 
 use Zend\Db\Adapter\Adapter as DbAdapter,
-        Zend\EventManager\StaticEventManager;
+     Infosyspro\Mobile\Mobile;
 
+/**
+ * This is Zend core module config
+ */
 class Module {
 
     protected $view;
     protected $viewListener;
 
-    /*   public function init(Manager $moduleManager) {
-
-      $events = StaticEventManager::getInstance();
-      $events->attach('bootstrap', 'bootstrap', array($this, 'initializeView'));
-      }
-     */
-
+  
     public function onBootstrap($e)
     {
        $this->initializeView($e);
@@ -36,6 +52,11 @@ class Module {
 	
     }
 
+    /**
+     * Setup service manager
+     * 
+     * @return void
+     */
     public function getServiceConfiguration() {
         return array(
            
@@ -63,6 +84,14 @@ class Module {
         return include __DIR__ . '/config/module.config.php';
     }
 
+    /**
+     * Process custom config after the bootsrap has been proccessed
+     * 
+     * This is where layouts are set and mobile devices are detected
+     * So that views can be rendered appropriately
+     * 
+     * @param object $e
+     */
     public function initializeView($e) {
 
        
@@ -71,83 +100,44 @@ class Module {
         $requestUri = $app->getRequest()->getRequestUri();
         $basePath = $app->getRequest()->getBasePath();
         $sm = $app->getServiceManager();
-        $config = $sm->get('config');
-       // $view = $this->getView($app);
-         $view = $sm->get('viewrenderer');
+        $sessionManager = $sm->get('session');
+        $sessionManager->setName('infosysApp');
+        $sessionManager->start();
+        $view = $sm->get('viewrenderer');
         $view->plugin('basePath')->setBasePath($basePath);
-        $browser = @get_browser(null, true);
+        $device = new Mobile();
 
-        if (!empty($browser['ismobiledevice'])) {
-
-            $tpl = $locator->get('Zend\View\Resolver\TemplateMapResolver');
+       if (1 === strpos($requestUri, 'cms', 1) && ( $device->isTablet() || $device->getName() === null)) {
+             $tplManger = $sm->get('ViewTemplateMapResolver');  	    
             $map = array(
-                'layout/layout' => __DIR__ . '/views/layouts/mobile.phtml',
-                'layout/errorlayout' => __DIR__ . '/views/layouts/errorMobile.phtml',
+                'layout/layout' => __DIR__ . '/view/layout/cms.phtml',
+                'layout/errorlayout' => __DIR__ . '/view/layouts/error.phtml',
             );
 
-            $tpl->setMap($map);
+            $tplManger->setMap($map);
+            unset($tplManger);
+            unset($map);
+        } elseif ($device->isMobileDevice()) {
+            $tplManger = $sm->get('ViewTemplateMapResolver');  
+            $map = array(
+                'layout/layout' => __DIR__ . '/view/layout/mobile.phtml',
+                'layout/errorlayout' => __DIR__ . '/view/layout/errorMobile.phtml',
+            );
 
-            $viewPath = $tpl = $locator->get('Zend\View\Resolver\TemplatePathStack');
+            $tplManger->setMap($map);
+
+            $viewPath = $sm->get('ViewTemplatePathStack');
             $path = array(
                 'application' => __DIR__ . '/mobile',
             );
             $viewPath->setPaths($path);
-            unset($tpl);
+            unset($tplManger);
             unset($map);
             unset($viewPath);
             unset($path);
-        } elseif (1 === strpos($requestUri, 'cms', 1) && empty($browser['ismobiledevice'])) {
-
-            $tpl =  new \Zend\View\Resolver\TemplateMapResolver;
-            $map = array(
-                'layout/layout' => __DIR__ . '/views/layouts/cms.phtml',
-                'layout/errorlayout' => __DIR__ . '/views/layouts/error.phtml',
-            );
-
-            $tpl->setMap($map);
-            unset($tpl);
-            unset($map);
-        } else {
-
-           
-         /*   $viewListener = $this->getViewListener($view, 'layout/layout');
-            $app->events()->attachAggregate($viewListener);
-            $events = StaticEventManager::getInstance();
-            $viewListener->registerStaticListeners($events, $sm);
-          * 
-          */
-        }
-
-        $sessionManager = $sm->get('session');
-        $sessionManager->setName('infosysApp');
-        $sessionManager->start();
-    }
-
-    protected function getViewListener($view, $layout) {
-        // if()
-        if ($this->viewListener instanceof View\Listener) {
-            return $this->viewListener;
-        }
-
-        $viewListener = new View\Listener($view, $layout);
-        $viewListener->setDisplayExceptionsFlag(true);
-
-        $this->viewListener = $viewListener;
-        return $viewListener;
-    }
-
-    protected function getView($app) {
-        if ($this->view) {
-            return $this->view;
-        }
-
-        $di = $app->getLocator();
-        $view = $di->get('view');
-        $url = $view->plugin('url');
-        $url->setRouter($app->getRouter());
-
-        $this->view = $view;
-        return $view;
+            
+        } 
+        
     }
 
 }

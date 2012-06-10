@@ -42,7 +42,8 @@ use Application\Model\TbConfig,
  * @author    David Oabile <doabile@infosyspro.com.au>
  * 
  */
-class ModuleConfig {
+class ModuleConfig implements \Infosyspro\RestInterfaceClasses
+{
   
   protected $nestSeparator = '.';
   
@@ -116,6 +117,154 @@ class ModuleConfig {
      return $_config;
     }
 
+    /**
+     * RESTFull POST
+     * @param array $locator
+     * @param array $data
+     * @return boolean 
+     */
+    public function create ( Array $data )
+    {
+        $method = strtolower ( array_pop ( explode ( '_' , $data['object'] ) ) ) ;
+	    unset ( $data['object'] ) ;
+	    if ( method_exists ( $this , $method ) ) {
+		return $this->$method ( $data ) ;
+	    }
+	
+    }
+
+    /**
+     * RESTful delete
+     * @param array $locator
+     * @param init $id
+     * @return boolean 
+     */
+    public function delete ( $id )
+    {
+	$this->mysql->delete($id);
+    }
+
+    /**
+     * RESTFul GET
+     * @param array $locator
+     * @param int $id
+     * @param array $data
+     * @return bool 
+     */
+    public function get ( $id , Array $data )
+    {
+        return $this->mysql->getRow($id);
+      
+    }
+    
+     public function getList (Array $data )
+    {
+	
+        //check which method has been called
+        if(!empty( $data['method'])) {
+            $method = $data['method'];
+       
+        if(method_exists($this, $method)) {
+            return $this->$method( $data);
+        }
+	
+        }
+       return false;
+      
+    }
+    
+
+    /**
+     * RESTFul PUT
+     * @param array $locator
+     * @param int $id
+     * @param array $data
+     * @return boolean 
+     */
+    public function update ( $id , Array $data )
+    {
+	return $this->mysql->updateRow ( $data ) ;
+    }
+
+    public function addNewConfig ( $data ) {
+        $request = $this->getRequest();
+        $error = false;
+
+        // $this->company->getSession()->setKey('lang','en');
+        if ($request->isPost()) {
+            if ($request->post()->get('iform', false)) {
+
+                $postdata = $request->post()->toArray();
+                // $validator = new \Zend\Validator\Alnum();
+                //  $validator2 = new \Zend\Validator\Alnum(array('allowWhiteSpace' => true));
+                $form = array();
+
+                $num = 0;
+                if (!empty($postdata['iform']['config_key'][2])) {
+                    $num = 2;
+                } elseif (!empty($postdata['iform']['config_key'][1])) {
+                    $num = 1;
+                }
+
+
+                for ($i = 0; $i <= $num; $i++) {
+                    $v = $i + 1;
+                    $data['key'] = $postdata['iform']['config_key'][$i];
+
+                    // if (!$validator->isValid($data['key'])) {
+                    //     $error = true;
+                    //     $this->company->getSession()->setKey('message', array('type' => 'error', 'message' => sprintf($this->lang->translate('errorIncorrectData'), 'category'. $v)));
+                    //     break;
+                    // }
+                    $data['value'] = $postdata['iform']['config_value'][$i];
+
+                    /* if (!$validator->isValid($data['value'])) {
+                      $error = true;
+                      $this->company->getSession()->setKey('message', array('type' => 'error', 'message' => 'Incorrect data detected in value' . $v));
+                      break;
+                      }
+                     */
+                    $data['langid'] = $postdata['iform']['config_language'][$i];
+                    $data['description'] = $postdata['iform']['config_description'][$i];
+                    // if (!$validator2->isValid($data['description'])) {
+                    //    $error = true;
+                    //    $this->company->getSession()->setKey('message', array('type' => 'error', 'message' => sprintf($this->lang->translate('errorIncorrectData'), 'category'. $v)));
+                    //     break;
+                    // }
+
+                    $data['moduleName'] = $postdata['iform']['config_category'][$i];
+                    // if (!$validator->isValid($data['moduleName'])) {
+                    //      $error = true;
+                    //      $this->company->getSession()->setKey('message', array('type' => 'error', 'message' => sprintf($this->lang->translate('errorIncorrectData'), 'category'. $v)));
+                    //    break;
+                    //   }
+
+                    $form[] = $data;
+                }
+                if (!$error && sizeof($form) > 0) {
+                    $table = $this->locator->get('Dbtable');
+                    $table->setOptions(array('name' => 'TbConfig'));
+                    foreach ($form as $v) {
+                        if (!$table->insert($v)) {
+                            $this->company->getSession()->setKey('message', array('type' => 'error', 'message' => $this->lang->translate('failedInsertData')));
+                            $error = true;
+                            break;
+                        }
+                    }
+
+                    if (!$error) {
+                        $this->company->getSession()->setKey('message', array('type' => 'message', 'message' => $this->lang->translate('newConfigurationAdded')));
+                    }
+                }
+            }
+        }
+        $configs = $this->locator->get('appConfig');
+        $config = $configs->loadDbConfig();
+        $this->company->setHeadScript('appendFile', array('/media/cms/js/system/switcher.js'));
+        return array('config' => $config, 'lang' => $this->lang);
+    }
+    
+    
      /**
      * Assign the key's value to the property list. Handles the
      * nest separator for sub-properties.

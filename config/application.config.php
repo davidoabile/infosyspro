@@ -1,23 +1,5 @@
 <?php
 
-/*
-  return array(
-  'modules' => array(
-  'Application',
-  'Cms'
-
-  ),
-  'module_listener_options' => array(
-  'config_cache_enabled' => false,
-  'cache_dir' => 'data/cache',
-  'module_paths' => array(
-  './modules',
-  './vendor',
-  ),
-  ),
-  );
- * 
- */
 return array(
     'modules' => array(
         'Application',
@@ -25,7 +7,7 @@ return array(
     ),
     'module_listener_options' => array(
         'config_glob_paths' => array(
-            'config/autoload/{,*.}{global,local}.php',
+            'config/autoload/{,*.}{global,local,' . COMPANY_NAME .'.config}.php',
         ),
         'config_cache_enabled' => false,
         'cache_dir' => 'data/cache',
