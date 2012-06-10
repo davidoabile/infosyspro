@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+  <header adminlang="en" creationtool="locale4j" creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
+  <body>
+    <tu tuid="AddNewConfiguration">
+      <tuv xml:lang="tn">
+        <seg>ss</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Add New Configuration</seg>
+      </tuv>
+    </tu>
+    <tu tuid="ConfigurationKey">
+      <tuv xml:lang="tn">
+        <seg>Configuration Key</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Configuration Key</seg>
+      </tuv>
+    </tu>
+    <tu tuid="ConfigurationKeydescription">
+      <tuv xml:lang="tn">
+        <seg>c</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Key used to identify the value</seg>
+      </tuv>
+    </tu>
+    <tu tuid="NewConfiguration">
+      <tuv xml:lang="tn">
+        <seg>ss</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>New Configuration</seg>
+      </tuv>
+    </tu>
+    <tu tuid="admin_login">
+      <tuv xml:lang="tn">
+        <seg>type here</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Administration Login</seg>
+      </tuv>
+    </tu>
+    <tu tuid="administration">
+      <tuv xml:lang="tn">
+        <seg>type here</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Administration</seg>
+      </tuv>
+    </tu>
+    <tu tuid="configSiteMailServer">
+      <tuv xml:lang="tn">
+        <seg>ee</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Mail Server</seg>
+      </tuv>
+    </tu>
+    <tu tuid="configSiteMailServerDescription">
+      <tuv xml:lang="tn">
+        <seg>ee</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Mail Server:: This is the MX that will be used to send out emails. if blank, the default mail server will be attempted</seg>
+      </tuv>
+    </tu>
+    <tu tuid="configSiteMailServerUseSmtp">
+      <tuv xml:lang="tn">
+        <seg>ee</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Use SMTP</seg>
+      </tuv>
+    </tu>
+    <tu tuid="configSiteMailServerUseSmtpDescription">
+      <tuv xml:lang="tn">
+        <seg>ee</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>USE SMTP:: Should we use the local mail server or remote SMTP</seg>
+      </tuv>
+    </tu>
+    <tu tuid="configSiteMailSettings">
+      <tuv xml:lang="tn">
+        <seg>ee</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Mail Settings</seg>
+      </tuv>
+    </tu>
+    <tu tuid="configSiteSettings">
+      <tuv xml:lang="tn">
+        <seg>e</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Site Settings</seg>
+      </tuv>
+    </tu>
+    <tu tuid="configurationCategory">
+      <tuv xml:lang="tn">
+        <seg>c</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Configuration Category</seg>
+      </tuv>
+    </tu>
+    <tu tuid="configurationCategoryDescription">
+      <tuv xml:lang="tn">
+        <seg>cc</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Category which this configuration belongs to</seg>
+      </tuv>
+    </tu>
+    <tu tuid="configurationDescription">
+      <tuv xml:lang="tn">
+        <seg>d</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Configuration Description</seg>
+      </tuv>
+    </tu>
+    <tu tuid="configurationDescriptionDescription">
+      <tuv xml:lang="tn">
+        <seg>cc</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Description of the configuration key</seg>
+      </tuv>
+    </tu>
+    <tu tuid="configurationLanguage">
+      <tuv xml:lang="tn">
+        <seg>c</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Configuration Language</seg>
+      </tuv>
+    </tu>
+    <tu tuid="configurationLanguageDescription">
+      <tuv xml:lang="tn">
+        <seg>cc</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Language which this configuration belongs to</seg>
+      </tuv>
+    </tu>
+    <tu tuid="configurationNotes">
+      <tuv xml:lang="tn">
+        <seg>c</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Hover your mouse over the heading to see what the do</seg>
+      </tuv>
+    </tu>
+    <tu tuid="configurationRules">
+      <tuv xml:lang="tn">
+        <seg>cc</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>1. Adding a new configuration will make no difference to the application's configuration. You should inform the developer of the change.</seg>
+      </tuv>
+    </tu>
+    <tu tuid="configurationValue">
+      <tuv xml:lang="tn">
+        <seg>c</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Configuration Value</seg>
+      </tuv>
+    </tu>
+    <tu tuid="configurationValueDescription">
+      <tuv xml:lang="tn">
+        <seg>c</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>The configuration value. This is the data that will be displayed on the site</seg>
+      </tuv>
+    </tu>
+    <tu tuid="contentManagement">
+      <tuv xml:lang="tn">
+        <seg>contene</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Content Management</seg>
+      </tuv>
+    </tu>
+    <tu tuid="directory_create_failed">
+      <tuv xml:lang="tn">
+        <seg>type here</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Failed to create directory [%s]</seg>
+      </tuv>
+    </tu>
+    <tu tuid="file_is_too_big">
+      <tuv xml:lang="tn">
+        <seg>type here</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>File is Too Big</seg>
+      </tuv>
+    </tu>
+    <tu tuid="file_successfully_uploaded">
+      <tuv xml:lang="tn">
+        <seg>type here</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>File Successfully Uploaded</seg>
+      </tuv>
+    </tu>
+    <tu tuid="go_to_home_site">
+      <tuv xml:lang="tn">
+        <seg>type here</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Go to site home page.</seg>
+      </tuv>
+    </tu>
+    <tu tuid="invalid_username">
+      <tuv xml:lang="tn">
+        <seg>type here</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Invalid username and or password</seg>
+      </tuv>
+    </tu>
+    <tu tuid="language_label">
+      <tuv xml:lang="tn">
+        <seg>type here</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Set Language</seg>
+      </tuv>
+    </tu>
+    <tu tuid="login_attempts">
+      <tuv xml:lang="tn">
+        <seg>type here</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>You are only allowed %s login attempts. After this you account will be locked for %s minutes</seg>
+      </tuv>
+    </tu>
+    <tu tuid="make_selection_from_the_list">
+      <tuv xml:lang="tn">
+        <seg>type here</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Please first make a selection from the list</seg>
+      </tuv>
+    </tu>
+    <tu tuid="move_down">
+      <tuv xml:lang="tn">
+        <seg>type here</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Move Down</seg>
+      </tuv>
+    </tu>
+    <tu tuid="move_up">
+      <tuv xml:lang="tn">
+        <seg>type here</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Move Up</seg>
+      </tuv>
+    </tu>
+    <tu tuid="newConfigurationAdded">
+      <tuv xml:lang="tn">
+        <seg>sharpo</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>New configuration added successfully</seg>
+      </tuv>
+    </tu>
+    <tu tuid="no">
+      <tuv xml:lang="tn">
+        <seg>nyaa</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>No</seg>
+      </tuv>
+    </tu>
+    <tu tuid="no _record_found">
+      <tuv xml:lang="tn">
+        <seg>type here</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>No record found</seg>
+      </tuv>
+    </tu>
+    <tu tuid="not_superadmin">
+      <tuv xml:lang="tn">
+        <seg>type here</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Only users with Super Admin permissions can change other Super Admin user accounts.</seg>
+      </tuv>
+    </tu>
+    <tu tuid="password_not_match">
+      <tuv xml:lang="tn">
+        <seg>type here</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Passwords do not match. Please re-enter password.</seg>
+      </tuv>
+    </tu>
+    <tu tuid="saveConfiguration">
+      <tuv xml:lang="tn">
+        <seg>cc</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Save Configuration</seg>
+      </tuv>
+    </tu>
+    <tu tuid="set_default">
+      <tuv xml:lang="tn">
+        <seg>type here</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Set default</seg>
+      </tuv>
+    </tu>
+    <tu tuid="shop">
+      <tuv xml:lang="tn">
+        <seg>ss</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Shop</seg>
+      </tuv>
+    </tu>
+    <tu tuid="unpublish_item">
+      <tuv xml:lang="tn">
+        <seg>type here</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Unpublish Item</seg>
+      </tuv>
+    </tu>
+    <tu tuid="upload_completed">
+      <tuv xml:lang="tn">
+        <seg>type here</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Upload Completed</seg>
+      </tuv>
+    </tu>
+    <tu tuid="view_all">
+      <tuv xml:lang="tn">
+        <seg>type here</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>View All</seg>
+      </tuv>
+    </tu>
+    <tu tuid="yes">
+      <tuv xml:lang="tn">
+        <seg>ee</seg>
+      </tuv>
+      <tuv xml:lang="en">
+        <seg>Yes</seg>
+      </tuv>
+    </tu>
+  </body>
+</tmx>

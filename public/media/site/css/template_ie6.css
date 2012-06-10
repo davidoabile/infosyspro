@@ -1,0 +1,85 @@
+/** IE6 is a hunk of crap!!! due to limitations in the CSS capabilities of IE, these hacks are required **/
+
+/* font tweaking */
+#ff-optima h1, #ff-optima h2, #ff-optima h3, #ff-optima h4, #ff-optima h5, #ff-optima h6, #ff-lucida h1, #ff-lucida h2, #ff-lucida h3, #ff-lucida h4, #ff-lucida h5, #ff-lucida h6 {letter-spacing: -0.07em;}
+body#ff-optima, body#ff-lucida {letter-spacing: -0.05em;}
+body#ff-optima #vmMainPage, body#ff-lucida #vmMainPage {letter-spacing: 0em;}
+body#ff-georgia, body#ff-georgia.f-default {font-size: 12px;}
+
+/* horizmenu */
+#horiz-menu {position:relative;z-index:140;}
+#horiz-menu li .link span, #horiz-menu li, #horiz-menu li.active, #horiz-menu li.sfHover, .menutop .animated-bg {display:inline-block;}
+#horiz-menu li.parent-sfHover, .menutop .drop-wrap {z-index:800 !important;}
+
+/* topbar */
+.logo-text {right: 8px;}
+#accessibility {width: 130px;zoom: 1;}
+#accessibility .button {float: left;line-height:16px;}
+#accessibility a.small .button {margin-left: 5px;margin-right: 0;}
+.textsizer-desc {float: left;}
+#login-module .username-block, #login-module .password-block {width: 120px;}
+#login-module input#username_vmlogin.inputbox, #login-module input#mod_login_username.inputbox, #login-module input#password_vmlogin.inputbox, #login-module input#mod_login_password.inputbox {width: 115px;}
+
+/* main layout */
+#header, #botbar2, #botbar3, ul.menutop, #showcase3, #showcase4, #bottom, #footer, #footer2, #footer3, #footerbar2, #footerbar3, #bottom-menu, #leftcol, #leftcol-bg, #rightcol, #maincol, #maincol2, #main-body, .side-mod, #breadcrumbs, ul.menu, .module, #showmodules, #mainmodules, #mainmodules2, #mainmodules3, #mainmodule4, #bottom-main, li.cat-close, #inset-block-left, #inset-block-right, #inset-block-right .right-padding, #inset-block-left .left-padding, #main-content, #main-content-block, .readon1-m, .readon1-r, .readon2-m, .readon2-r, .details-catbar, .add-cart, .add-cart-inner, .cat-open {zoom: 1;}
+.readon-wrap1 span, .readon-wrap2 span {display:inline-block;}
+.readon1-m, .readon2-m {margin-left: -3px;}
+.readon1-r, .readon2-r {line-height: 20px;}
+.readon1-r, .readon2-r {margin-right:0;}
+#main-content-surround {zoom: 1;}
+.showcase-surround {zoom: 1;}
+.sec-div {zoom: 1;font-size: 0;line-height: 0;}
+.article_row {zoom: 1;}
+.cols1 {display: block !important;width: 100%;}
+.article_column {position: relative;}
+.cols2 {width: 49%;overflow: hidden;}
+.corner, .show-bl, .show-br, .bottom-br, .bottom-bl, .bottom-tr, .bottom-tl {font-size: 0;line-height: 0;}
+#searchmod .inputbox {padding-top: 0;}
+.componentheading {position:relative;left: 0px;width:100%;margin:0 - 14px;}
+h1.componentheading {width:auto;}
+
+/* vm module fixes */
+ul.menu span {zoom:1;cursor:pointer;}
+div.stretcher fieldset {padding-bottom:15px;}
+.cat-bot-bg{word-wrap: break-word;position:relative;}
+
+.corner {clear:both;}
+#tr.corner, .bottom-tr {margin-right:-1px;}
+#br.corner, .bottom-br, .show-br {margin-right:-1px;}
+.dark .show-br,.dark .show-bl {bottom: -1px;}
+
+#horizontal-rokvmscroller {width:auto;}
+.horizontal-rokvmscroller-leftarrow, .horizontal-rokvmscroller-rightarrow {height: 215px;}
+.horizontal-rokvmscroller-rightarrow {margin-right: -1px;}
+.horizontal-rokvmscroller-container {height: 210px;}
+.horizontal-scroller-top2 {position: relative;overflow: hidden;}
+
+.quantity_box_button_up {margin-left: 35px;}
+
+/* Cart fixes */
+#cart-panel .cart-listings {float: left;}
+#cart-panel .cart-totals {height: 19px;}
+div.details-catbar {zoom:1;}
+.quantity_box {float:none;}
+.quantity_box_button_up {margin-left:31px;}
+.shopping-cart-main tr.sectiontableheader {padding: 0;}
+
+/* rok module fixes */
+#roksearch_results .roksearch_even {zoom:1;}
+#roksearch_results .container-wrapper {position:relative;zoom:1;width:400px;}
+#roksearch_results .container-scroller {position:relative;zoom:1;}
+#roksearch_results .container-scroller .page .roksearch_odd, #roksearch_results .container-scroller .page .roksearch_even {zoom:1;z-index:1000;}
+#roksearch_results .container-scroller span.small { bottom:6px;right:10px}
+.roktabs-wrapper .roktabs-links ul li {white-space: nowrap;}
+.roktabs-wrapper .arrow-prev {background-position: 0 0;}
+
+/* ie6 warning */
+#iewarn {background: #C6D3DA url(../images/error.png) 10px 20px no-repeat;position: relative;z-index: 1;opacity: 0;margin: -150px auto 0;font-size: 110%;color: #001D29;z-index: 8000;}
+#iewarn div {position: relative;border-top: 5px solid #95B8C9;border-bottom: 5px solid #95B8C9;padding: 10px 80px 10px 220px;}
+#iewarn h4 {color: #900;font-weight: bold;line-height: 120%;}
+#iewarn a {color: #296AC6;font-weight: bold;}
+#iewarn_close {background: url(../images/close.png) 50% 50% no-repeat;display: block;cursor: pointer;position: absolute;width: 61px;height: 21px;top: 25px;right: 12px;}
+#iewarn_close.cHover {background: url(../images/close_hover.png) 50% 50% no-repeat;}
+
+/* page peel overrides for demo site */
+a.fliptip {display: block;z-index: 100000;position: relative;}

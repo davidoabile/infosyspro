@@ -1,0 +1,34 @@
+/* font tweaking */
+#ff-optima h1, #ff-optima h2, #ff-optima h3, #ff-optima h4, #ff-optima h5, #ff-optima h6, #ff-lucida h1, #ff-lucida h2, #ff-lucida h3, #ff-lucida h4, #ff-lucida h5, #ff-lucida h6 {letter-spacing: -0.07em;}
+body#ff-georgia, body#ff-georgia.f-default {font-size: 12px;}
+body#ff-trebuchet.f-large {font-size: 13px;}
+#header, ul.menutop,#showcase3,#showcase4 {zoom:1;}
+#searchmod .inputbox {padding-top: 0;}
+#horiz-menu li.parent.sfHover, .menutop .drop-wrap {z-index:800 !important;}
+
+/* main layout */
+.componentheading {width:100%;margin:0 - 14px;}
+h1.componentheading {width:auto;}
+
+/* have to hard-code these widths */
+#accessibility {width: 130px;}
+#buttons {width:35px;}
+
+/* vm module fixes */
+ul.menu span {zoom:1;cursor:pointer;}
+div.stretcher fieldset {padding-bottom:15px;}
+.quantity_box {float:none;}
+.cat-bot-bg{word-wrap: break-word;position:relative;}
+
+/* rok module fixes */
+.roktabs-wrapper .roktabs-links ul li {white-space: nowrap;}
+#roksearch_results .container-wrapper {position:relative;zoom:1;}
+#roksearch_results .container-scroller {position:relative;zoom:1;}
+
+/* default joomla layout fixes */
+.article_row {zoom: 1;}
+.cols1 {display: block !important;width: 100%;}
+.article_column {position: relative;}
+.cols2 {width: 49%;overflow: hidden;}
+
+.clr {line-height:0;height:0;}

@@ -1,0 +1,55 @@
+Attempts : <?php echo $this->attempts; ?>
+<div id="content-box">
+    <div id="element-box" class="login">
+        <div class="m wbg">
+            <h1><?php echo $this->company ?> Administration Login</h1>
+
+           <odoc:include type="Sticky" name="MessageQueue" />
+           
+            <div id="section-box">
+                <div class="m">
+                    <form action="/administrator/index.php" method="post" id="form-login">
+                        <fieldset class="loginform">
+
+                            <label id="mod-login-username-lbl" for="mod-login-username">User Name</label>
+                            <input name="username" id="mod-login-username" type="text" class="inputbox" size="15" />
+
+                            <label id="mod-login-password-lbl" for="mod-login-password">Password</label>
+                            <input name="passwd" id="mod-login-password" type="password" class="inputbox" size="15" />
+
+                            <label id="mod-login-language-lbl" for="lang">Language</label>
+                            <select id="lang" name="lang"  class="inputbox">
+                                <option value="" selected="selected">Default</option>
+                            </select>
+
+                            <div class="button-holder">
+                                <div class="button1">
+                                    <div class="next">
+                                        <a href="#" onclick="document.getElementById('form-login').submit();">
+                                            Log in</a>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="clr"></div>
+                            <input type="submit" class="hidebtn" value="Log in" />
+                            <input type="hidden" name="option" value="com_login" />
+                            <input type="hidden" name="task" value="login" />
+                            <input type="hidden" name="return" value="aW5kZXgucGhw" />
+                            <input type="hidden" name="c2eef91481bce322d02d6f091c32e77f" value="1" />	</fieldset>
+                    </form>
+
+                    <div class="clr"></div>
+                </div>
+            </div>
+
+            <p>You are only allowed <?php echo $this->allowedFailedLoginValue ?> login attempts. After this you account will be locked for <?php echo $this->maxLockoutTime ?> minutes</p>
+            <p><a href="http://joomla/">Go to site home page.</a></p>
+            <div id="lock"></div>
+        </div>
+    </div>
+
+    <noscript>
+    Warning! JavaScript must be enabled for proper operation of the Administrator backend.			</noscript>
+</div>

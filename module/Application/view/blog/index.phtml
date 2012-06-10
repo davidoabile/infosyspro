@@ -1,0 +1,45 @@
+<div role="main" id="content">
+
+
+    <nav id="nav-single">
+        <h3 class="assistive-text">Post navigation</h3>
+        <span class="nav-previous"></span>
+        <span class="nav-next"><a rel="next" href="http://wp-themes.com/?p=4">Next <span class="meta-nav">?</span></a></span>
+    </nav><!-- #nav-single -->
+
+    
+
+    <article class="post-1 post type-post status-publish format-standard hentry category-uncategorized" id="post-1">
+       
+        <div class="entry-content">
+            <p><?php echo html_entity_decode($this->data ) ?></p>
+        </div><!-- .entry-content -->
+
+
+    </article><!-- #post-1 -->
+<?php if( !empty($this->comments )) : ?>
+    <div id="comments">        
+       <?php  echo html_entity_decode($this->comments ) ?>
+        <div id="respond">
+            <h3 id="reply-title">Leave a Reply <small><a style="display:none;" href="/?p=1#respond" id="cancel-comment-reply-link" 
+                                                         rel="nofollow">Cancel reply</a></small></h3>
+            <form id="commentform" method="post" action="blog/addcomment">
+                <p class="comment-notes">Your email address will not be published. Required fields are marked <span class="required">*</span></p>							<p class="comment-form-author"><label for="author">Name</label> <span class="required">*</span><input type="text" aria-required="true" size="30" value="" name="author" id="author"></p>
+                <p class="comment-form-email"><label for="email">Email</label> <span class="required">*</span><input type="text" 
+                             aria-required="true" size="30" value="" name="email" id="email"></p>
+                <p class="comment-form-url"><label for="url">Website</label><input type="text" size="30" value="" name="url" id="url"></p>
+                <p class="comment-form-comment"><label for="comment">Comment</label><textarea aria-required="true" rows="8" cols="45" 
+                         name="comment" id="comment"></textarea></p><p class="form-allowed-tags">You may use these 
+                    <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:  <code>&lt;a href="" title=""&gt; &lt;abbr 
+                        title=""&gt; &lt;acronym title=""&gt; &lt;b&gt; &lt;blockquote cite=""&gt; &lt;cite&gt; &lt;code&gt; &lt;del 
+                        datetime=""&gt; &lt;em&gt; &lt;i&gt; &lt;q cite=""&gt; &lt;strike&gt; &lt;strong&gt; </code></p>						<p class="form-submit">
+                    <input type="submit" value="Post Comment" id="submit" name="submit">
+                    <input type="hidden" id="comment_post_ID" value="1" name="comment_post_ID">
+                    <input type="hidden" value="0" id="comment_parent" name="comment_parent">
+                </p>
+            </form>
+        </div><!-- #respond -->
+    </div><!-- #comments -->
+ <?php endif ?>
+
+</div>

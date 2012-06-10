@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Administrator Control Panel</title>
+
+    <link rel="stylesheet" type="text/css" href="/media/cms/resources/css/ext-all.css" />
+    <link rel="stylesheet" type="text/css" href="/media/cms/desktop/css/desktop.css" />
+
+    <!-- 
+    	switch the following line to the bootstrapper instead of the 
+    	non-debugged core to get debug details. 
+	--> 
+    <!-- script type="text/javascript" src="../../builds/ext-core.js"></script -->
+    <script type="text/javascript" src="/media/cms/bootstrap.js"></script>
+    
+    <!-- 
+    	disable the reference to the pre-compiled "classes.js". 
+    -->
+    <!-- script type="text/javascript" src="classes.js"></script -->
+
+    <script type="text/javascript">
+    	// Turn on the loader so that things get loaded automatically...
+    	Ext.Loader.setConfig({enabled:true});
+        Ext.Loader.setPath({
+            'Ext.ux.desktop': '/media/cms/desktop/js',
+            MyDesktop: '/media/cms/desktop/'
+        });
+
+        Ext.require('MyDesktop.App');
+
+        var myDesktopApp;
+        Ext.onReady(function () {
+            myDesktopApp = new MyDesktop.App();
+        });
+    </script>
+</head>
+
+<body>
+
+    <a href="http://infosyspro.com.au" target="_blank" alt="Powered by Infosyspro"
+       id="poweredby"><div></div></a>
+
+</body>
+</html>
