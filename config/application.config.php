@@ -3,7 +3,7 @@
 return array(
     'modules' => array(
         'Application',
-        'Cms',
+        'Myofficeapps',
     ),
     'module_listener_options' => array(
         'config_glob_paths' => array(

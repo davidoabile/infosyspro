@@ -128,10 +128,9 @@ use Zend\EventManager\EventCollection,
 
      public function onLogOff(ZendEvent $e)
      {
-         $company = self::$locator->get('companylib');
-	  $userSession = $lib->getUserSession();
+         $lib = self::$locator->get('companylib');
+	 $userSession = $lib->getUserSession();
          $params = $e->getParams();
-         $company->getSession()->setKey('message', array('type' => 'message', 'message' => 'You have successfully logged out of the system'));
          $userSession->destroy($params['sessionId']);
      }
 

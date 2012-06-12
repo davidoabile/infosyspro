@@ -48,8 +48,8 @@ abstract class AbstractDataManager
     protected  $adapter;
     
     protected $userSession = null;
-    
- 
+    protected $language = null;
+   protected $articleLib = null;
     /** 
      * @var The view object 
      */
@@ -154,6 +154,23 @@ abstract class AbstractDataManager
 	      $this->adapter = $this->locator->get('db-adapter');
 	 }
 	 return $this->adapter;
+     }
+     
+     public function getArticle()
+     {
+         if(null === $this->articleLib ) {
+             $this->articleLib = new Content\Article($this);
+         }
+         return $this->articleLib;
+     }
+     
+     
+     public function getLanguage()
+     {
+         if( null === $this->language ) {
+            $this->language = $this->locator->get('translator');
+         }
+         return $this->language;
      }
 }
 

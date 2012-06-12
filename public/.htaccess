@@ -7,6 +7,9 @@ RewriteCond %{HTTP_HOST} ^([^\./]+)
 RewriteCond %{DOCUMENT_ROOT}/_%1 -d
 RewriteRule ^(.*)$ _%1/$1 [L] 
 
+RewriteCond %{HTTP_HOST} ^myofficeapps\.tradingingredients\.com
+RewriteRule ^(.*)$ index/myofficeapps/$1 [NC]
+
 RewriteCond %{REQUEST_FILENAME} -s [OR]
 RewriteCond %{REQUEST_FILENAME} -l [OR]
 RewriteCond %{REQUEST_FILENAME} -d

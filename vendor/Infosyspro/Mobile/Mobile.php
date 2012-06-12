@@ -31,6 +31,7 @@ class Mobile
 
     protected $browser = null ;
     protected $devicename = null ;
+    protected $isTablet = false ;
     // List of tablet devices.
     protected $tabletDevices = array(
 	'BlackBerryTablet' => 'PlayBook|RIM Tablet',

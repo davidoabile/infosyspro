@@ -2,25 +2,12 @@
 return array(
      'di' => array(
         'instance' => array(
-            'alias' => array(               
-                'soapServer' => 'Zend\Soap\Server',
-                'soapClient' => 'Zend\Soap\Client',                
+            'alias' => array(    
                 'translator' => 'Infosyspro\Translator\Translator',
             ),
            
             'mail' => array(
                 'parameters' => array('configInstance' => 'appConfig',),
-            ),
-           
-            'soapServer' => array('parameters' => array('wsdl' => null,
-                    'options' => array('uri' => 'http://saas.development/soap-server'),
-                ),
-            ),
-            'soapClient' => array('parameters' => array('options' => array(
-                        'location' => 'http://saas.development/soap-server',
-                        'uri' => 'http://saas.development/soap-server',
-                    ),
-                )
             ),
             'translator' => array(
                 'parameters' => array('options' => array(

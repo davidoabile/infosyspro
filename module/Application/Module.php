@@ -96,8 +96,6 @@ class Module {
 
        
         $app = $e->getApplication();
-
-        $requestUri = $app->getRequest()->getRequestUri();
         $basePath = $app->getRequest()->getBasePath();
         $sm = $app->getServiceManager();
         $sessionManager = $sm->get('session');
@@ -106,11 +104,15 @@ class Module {
         $view = $sm->get('viewrenderer');
         $view->plugin('basePath')->setBasePath($basePath);
         $device = new Mobile();
+	$host = $app->getRequest()->uri();
+	$requestUri = ltrim( $host->getPath(), '/');
+	$url = array_shift( explode('.', $host->getHost()));
 
-       if (1 === strpos($requestUri, 'cms', 1) && ( $device->isTablet() || $device->getName() === null)) {
+       if (($url === 'myofficeapps' || $requestUri ===  'myofficeapps') && ( $device->isTablet() || $device->getName() === null)) {
+          
              $tplManger = $sm->get('ViewTemplateMapResolver');  	    
             $map = array(
-                'layout/layout' => __DIR__ . '/view/layout/cms.phtml',
+                'layout/layout' => __DIR__ . '/view/layout/myofficeapps.phtml',
                 'layout/errorlayout' => __DIR__ . '/view/layouts/error.phtml',
             );
 

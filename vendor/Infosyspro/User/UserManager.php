@@ -57,13 +57,15 @@ class UserManager implements RestInterfaceClasses
     protected static $authAdapter ;
     protected $locator = null ;
     protected $table ;
-    protected $cms = 0 ;
+    protected $office = 0 ;
+    protected $language = null;
 
     public function __construct ( authAdapter\AuthenticationService $instance = null , ServiceManager $locator = null )
     {
 	//return $events;
 	self::$authAdapter = $instance ;
 	$this->locator = $locator ;
+        $this->language = $locator->get('translator');
     }
 
     /**
@@ -89,8 +91,13 @@ class UserManager implements RestInterfaceClasses
      */
     public function authenticate ( $data  )    {
 
-	$this->office = (!empty($data['office'])) ? $data['office'] : 0 ;
-	if(empty($data['table'])) {
+	if(!empty($data['office'])) {
+            $this->office = 1;
+             $data['table'] = 'OfficeUsers' ;
+	    $data['usernameField'] = 'username';
+	    $data['passowrdField'] = 'password';
+            
+        } else {
 	    $data['table'] = 'TbUsers' ;
 	    $data['usernameField'] = 'username';
 	    $data['passowrdField'] = 'password';
@@ -114,13 +121,11 @@ class UserManager implements RestInterfaceClasses
 
 	if ( isset ( $_SESSION['username'] ) ) {
 	    $pass = $this->setPassword ( $newPass ) ;
-	    $res["success"] = TRUE ;
-	    $res["msg"] = 'The password has been changed.' ;
+	   return $this->_response(true, 'passwordUpdated' ) ;
 	} else {
-	    $res["success"] = FALSE ;
-	    $res["msg"] = 'You must be logged in to change the password.' ;
+	   return $this->_response(false , 'failedToUpdatePassword' ) ;
 	}
-	return $res ;
+	
     }
 
     /**
@@ -145,10 +150,10 @@ class UserManager implements RestInterfaceClasses
 	    /* Trigger events after user has logged off */
 	    InfosysproAuth::attachEvents ( $this->locator ) ;
 	    InfosysproAuth::afterLogOut ( array ( 'sessionId' => session_id () ) ) ;
-
-	    return true ;
+             return $this->_response(true, 'successfullyLoggedOut' ) ;
+	} else {
+	   return $this->_response(false, 'failedToLogout') ;
 	}
-	return false ;
     }
 
     //this function should only be called locally
@@ -186,9 +191,10 @@ class UserManager implements RestInterfaceClasses
 	    InfosysproAuth::afterlogIn ( $data ) ;
 
 	    $storage->write ( $authAdapter->getResultRowObject ( array ( 'id' , 'username' ) ) ) ;
+            return $this->_response('true' , 'successfullyLoggedIn' );
 	}
 
-	return $result ;
+	return $this->_response('false' , 'invalidUsernameOrPassword' );
     }
 
     /**
@@ -269,6 +275,23 @@ class UserManager implements RestInterfaceClasses
 	return $users->updateRow ( $data ) ;
     }
 
+    public function getList (Array $data )
+    {
+	
+        //check which method has been called
+        if(!empty( $data['method'])) {
+            $method = $data['method'];
+       
+        if(method_exists($this, $method)) {
+            return $this->$method( $data);
+        }
+	
+        }
+       return false;
+      
+    }
+    
+    
      public  function getCurrentUserInfo ( )
     {
 	self::getInstance () ;
@@ -311,21 +334,6 @@ class UserManager implements RestInterfaceClasses
 	
     }
 
-    public function getList (Array $data )
-    {
-	
-        //check which method has been called
-        if(!empty( $data['method'])) {
-            $method = $data['method'];
-       
-        if(method_exists($this, $method)) {
-            return $this->$method( $data);
-        }
-	
-        }
-       return false;
-      
-    }
     
     public function listUsers(){
         $users = new usersModel ( $this->getDb () ) ;
@@ -455,5 +463,10 @@ class UserManager implements RestInterfaceClasses
 	return $password ;
     }
 
+    protected function _response($flag, $lanId ) 
+    {
+        return array ( 'success' => (bool) $flag , 'msg' => $this->language->translate($lanId)) ;
+	
+    }
 }
 

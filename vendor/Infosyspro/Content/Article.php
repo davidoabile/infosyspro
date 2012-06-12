@@ -4,13 +4,23 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+namespace Infosyspro\Content;
+
+use Application\Model\TbArticle;
 
 
 class Article implements \Infosyspro\RestInterfaceClasses
 {
+    protected $lib = null;
+    protected $adapter = null;
     
-    
-    
+    public function __construct(\Infosyspro\InfosysproLib $infosyspro ) 
+    {
+        $this->lib = $infosyspro ;
+        $this->adapter = new TbArticle($infosyspro->getAdapter());
+    }
+
+
     /**
      * RESTFull POST
      * @param array $locator
@@ -67,7 +77,15 @@ class Article implements \Infosyspro\RestInterfaceClasses
       
     }
     
-
+    protected function listArticles($data) 
+    {
+        $data = $this->adapter->fetchAll();    
+           
+        return array('success' => true,
+                    'total'   =>  count($data),
+                     'articles' =>  $data  
+                     ); 
+    }
     /**
      * RESTFul PUT
      * @param array $locator
@@ -223,5 +241,48 @@ class Article implements \Infosyspro\RestInterfaceClasses
 
 
         return array('form' => $form);
+    }
+    
+     protected function _delete($data, $table) {
+        //msg if all went bad
+        $response = '{
+                        "success": false,   "type" : "ext-mb-error",                      
+                        "message": " ' . $this->lang->translate('failedToDeleteRecords') . ' "
+                     }';
+
+        if (!(int) $data['id']) {
+            return $response;
+        }
+        $adapter = $this->locator->get('Db');
+        $sql = 'DELETE FROM Tb' . $table . ' WHERE id=' . (int) $data['id'];
+
+        if (QuickSQL::delete($sql, $adapter)) {
+            $response = '{
+                             "success": true, "type" : "ext-mb-info",                              
+                             "message": ' . json_encode($this->lang->translate('recordsRemovedSuccessfully')) . ' 
+                            }';
+        }
+
+        return $response;
+    }
+
+    protected function _reader($sql) {
+        $data = '';
+
+        if (empty($sql))
+            return $response;
+
+        $adapter = $this->locator->get('Db');
+        QuickSQL::processQuery($sql, $adapter);
+        $total = QuickSQL::getCount();
+        if ($total > 0) {
+            $data = '{
+                            "success": true,
+                            "total": ' . $total . ',
+                            "articles":  ' . json_encode(QuickSQL::getResults()) . '  
+                        }';
+        }
+
+        return $this->_response($data);
     }
 }
