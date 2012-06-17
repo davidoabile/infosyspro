@@ -1,22 +1,9 @@
 /*
-
-This file is part of Ext JS 4
-
-Copyright (c) 2011 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-GNU General Public License Usage
-This file may be used under the terms of the GNU General Public License version 3.0 as published by the Free Software Foundation and appearing in the file LICENSE included in the packaging of this file.  Please review the following information to ensure the GNU General Public License version 3.0 requirements will be met: http://www.gnu.org/copyleft/gpl.html.
-
-If you are unsure which license is appropriate for your use, please contact the sales department at http://www.sencha.com/contact.
-
-*/
-/*!
- * Ext JS Library 4.0
- * Copyright(c) 2006-2011 Sencha Inc.
- * licensing@sencha.com
- * http://www.sencha.com/license
+ * qWikiOffice Desktop 0.7
+ * Copyright(c) 2007-2010, Murdock Technologies, Inc.
+ * licensing@qwikioffice.com
+ * 
+ * http://www.qwikioffice.com/license
  */
 
 Ext.define('MyDesktop.Modules.Notepad.Client.Notepad', {
@@ -38,41 +25,74 @@ Ext.define('MyDesktop.Modules.Notepad.Client.Notepad', {
         }
     },
 
-    createWindow : function(){
-        var desktop = this.app.getDesktop();
-        var win = desktop.getWindow('notepad');
-        if(!win){
-            win = desktop.createWindow({
-                id: 'notepad',
-                title:'Notepad',
-                width:600,
-                height:400,
-                iconCls: 'icon-notepad',
-                animCollapse:false,
-                border: false,
-                //defaultFocus: 'notepad-editor', EXTJSIV-1300
+	createWindow : function(){
+		var desktop = this.app.getDesktop();
+		var win = desktop.getWindow('notepad');
+		if(!win){
+			var winWidth = desktop.getWinWidth() / 1.1;
+			var winHeight = desktop.getWinHeight() / 1.1;
+			
+			win = desktop.createWindow({
+				id: 'notepad',
+				title:'Layout Window',
+				width:winWidth,
+				height:winHeight,
+				x:desktop.getWinX(winWidth),
+				y:desktop.getWinY(winHeight),
+				iconCls: 'layout-icon',
+				shim:false,
+				animCollapse:false,
+				constrainHeader:true,
+				minimizable:true,
+    			maximizable:true,
 
-                // IE has a bug where it will keep the iframe's background visible when the window
-                // is set to visibility:hidden. Hiding the window via position offsets instead gets
-                // around this bug.
-                hideMode: 'offsets',
-
-                layout: 'fit',
-                items: [
-                    {
-                        xtype: 'htmleditor',
-                        //xtype: 'textarea',
-                        id: 'notepad-editor',
-                        value: [
-                            'Some <b>rich</b> <font color="red">text</font> goes <u>here</u><br>',
-                            'Give it a try!'
-                        ].join('')
-                    }
-                ]
-            });
-        }
-        win.show();
-        return win;
-    }
+				layout: 'border',
+				tbar:[{
+					text: 'Button1'
+				},{
+					text: 'Button2'
+				}],
+				items:[{
+					region:'west',
+					autoScroll:true,
+					collapsible:true,
+					cmargins:'0 0 0 0',
+					margins:'0 0 0 0',
+					split:true,
+					title:'Panel',
+					width:parseFloat(winWidth*0.3) < 201 ? parseFloat(winWidth*0.3) : 200
+				},{
+					region:'center',
+					border:false,
+					layout:'border',
+					margins:'0 0 0 0',
+					items:[{
+						region:'north',
+						elements:'body',
+						title:'Panel',
+						height:winHeight*0.3,
+						split:true
+					},{
+						autoScroll:true,
+						elements:'body',
+						region:'center',
+						id:'Details',
+						title:'Preview Panel'
+					}]
+				},{
+					region:'east',
+                                        autoScroll:true,
+					collapsible:true,
+					cmargins:'0 0 0 0',
+					margins:'0 0 0 0',
+					split:true,
+                                        title: 'Qick Help',					
+					elements:'body',
+					width:parseFloat(winWidth*0.3) < 201 ? parseFloat(winWidth*0.3) : 200
+				}],
+				taskbuttonTooltip: '<b>Layout Window</b><br />A window with a layout'
+			});
+		}
+		win.show();
+	}
 });
-

@@ -13,110 +13,9 @@ use Infosyspro\Traits;
  *
  * @author davido
  */
-class Exjs implements \Infosyspro\RestInterfaceClasses
+class Exjs extends \Infosyspro\AbstractRestFul
 {
 
-    protected $infosyspro = null ;
-    protected $user = null;
-
-    public function __construct ( \Infosyspro\InfosysproLib $infosyspro )
-    {
-	$this->infosyspro = $infosyspro ;
-	$this->user = $infosyspro->getUsers();
-    }
-
-     public function create ( Array $data )
-    {
-
-	if ( isset ( $data['custom'] ) ) { //use custom class to process this
-	    $class = __NAMESPACE__ . '\\' . str_replace ( '_' , '\\' , $data['custom'] ) ;
-	    if ( !class_exists ( $class ) ) {
-		echo $class ;
-	    } else {
-		$inst = new $class ( $data ) ;
-		return true ;
-	    }
-	} else {
-	    $method = strtolower ( array_pop ( explode ( '_' , $data['object'] ) ) ) ;
-	    unset ( $data['object'] ) ;
-	    if ( method_exists ( $this , $method ) ) {
-		return $this->$method ( $data ) ;
-	    }
-	}
-    }
-
-    /**
-     * RESTful delete
-     * @param array $locator
-     * @param init $id
-     * @return boolean 
-     */
-    public function delete ( $id )
-    {
-	$currentUser = self::$authAdapter->getIdentity () ;
-	if ( $currentUser->id == $id ) {
-	    return false ;
-	}
-	
-	$users = new usersModel ( getDb () ) ;
-	return $users->delete ( $id ) ;
-    }
-
-    /**
-     * RESTFul GET
-     * @param array $locator
-     * @param int $id
-     * @param array $data
-     * @return bool 
-     */
-    public function get ( $id , Array $data )
-    {
-        //check which method has been called
-        if(!empty( $data['method'])) {
-            $method = $data['method'];
-        
-        if(method_exists($this, $method)) {
-            return $this->$method( $data);
-        }
-	
-        }
-       return false;
-    }
-
-    /**
-     * RESTFul PUT
-     * @param array $locator
-     * @param int $id
-     * @param array $data
-     * @return boolean 
-     */
-    public function update ( $id , Array $data )
-    {
-	$this->locator = $locator ;
-	$users = new usersModel ( getDb () ) ;
-	return $users->updateRow ( $data ) ;
-    }
-    
-     public function getList (Array $data )
-    {
-	
-        //check which method has been called
-        if(!empty( $data['method'])) {
-            $method = $data['method'];
-       
-        if(method_exists($this, $method)) {
-            return $this->$method( $data);
-        }
-	
-        }
-       return false;
-       /*
-        $this->locator = $locator ;
-	$users = new usersModel ( getDb () ) ;
-	return $users->fetchAll () ;
-        * 
-        */
-    }
     
     protected function listUsers($data = array()) {
         $users = $this->users->listUsers();
@@ -141,11 +40,102 @@ class Exjs implements \Infosyspro\RestInterfaceClasses
 			GROUP BY js
 			ORDER BY m.id " ;
 
-	Traits\QuickSQL::processQuery ( $sql , $this->infosyspro->getAdapter () );
-	
-	return Traits\QuickSQL::getResults ();
+	return $this->_getQuery($sql);
     }
 
+    /**
+     * Get roles associated with a resource
+     * 
+     * @return array result
+     */
+   
+    public function listResourceRoles( $data ) {
+         $id = $data['id'];
+         $module = (!empty($data['module'])) ? $data['module'] : 'Settings' ;
+      
+        $sql = "select $id as parent, id  as id,module,`option` as opt,action,
+				(
+					select if(count(1)>0,1,0)
+					from OfficeGroupsActions ga 
+					where groupid=$id and actionid=a.id
+				) as selected
+				from OfficeActions a
+				where module='$module'
+				order by id
+			";
+
+       return $this->_getQuery($sql);
+    }
+    
+    
+    
+     public function listGroups() {
+        $sql = 'SELECT * FROM OfficeGroups';
+	return $this->_getQuery($sql );
+    }
+    
+    public function listModulesInAGroup( $data ) {
+         $id = $data['id'];
+        $sql = "select $id as parent, id  as id,js,
+				(select count(id) from OfficeGroupsModules where groupid=$id and moduleid=m.id) as selected
+				from OfficeModules m";
+        
+        return $this->_getQuery($sql);
+    }
+    
+    public function listActionsGroups ( $data ) {
+	//var_dump($data); exit;
+	$id = $data['id'];
+         $module = (!empty($data['module'])) ? $data['module'] : 'Settings' ;
+      
+        $sql = "SELECT $id AS parent, id  as id,module,`option` as opt,action,
+				(
+				  SELECT IF(COUNT(1)>0,1,0)
+				  FROM OfficeGroupsActions ga 
+				  WHERE groupid=$id AND actionid=a.id
+				) as selected
+		FROM OfficeActions a
+		WHERE module='$module'
+		ORDER BY id";
+	//echo $sql; exit;
+	 return $this->_getQuery($sql);
+	
+    }
+    
+    public function saveGroups($data)
+    {
+        $model = $this->infosyspro->getModel('Myofficeapps\Model\OfficeGroups');
+        $i = 0;
+  
+        foreach ($data as $index => $sqlData) {
+            if( $sqlData['id'] == 0 ) {
+                $model->insert($sqlData );
+            } elseif($sqlData['id'] > 0) {
+                $model->update($sqlData,  array ( 'id' => $sqlData['id'] ) );
+            }
+	    
+            $i++;
+        }
+        return $this->_updateResult($i);
+       
+    }
+    
+    public function deleteGroups( $data )
+    {
+	$i = 0;
+	
+	if ($data['id'] > 0) {
+	    $model = $this->infosyspro->getModel('Myofficeapps\Model\OfficeGroups');
+	    if($model->delete($data))
+	    {
+		$i = 1;
+	    }
+	    return $this->_updateResult($i);
+	}
+	
+    }
+    
+    
    public  function checkPermision ()
     {
 	$user = $_SESSION["ExtDeskSession"]["username"] ;
@@ -296,7 +286,7 @@ class Exjs implements \Infosyspro\RestInterfaceClasses
 	    $response = array ('success' => false, 'login' => false) ;
 	    
 	}
-	return $this->_getDefaults($response);
+	return $this->_getDefaults( $response );
     }
     
     protected function _getDefaults ($data )
@@ -306,12 +296,7 @@ class Exjs implements \Infosyspro\RestInterfaceClasses
 	return $response;
     }
     
-     public function listUserGroups() {
-        $sql = 'SELECT * FROM OfficeGroups';
-	return $this->_getQuery($sql );
-    }
-    
-    public function getUserGroup($data ) {
+    public function getUserGroups($data ) {
         $id = $data['id'];
         $sql = "SELECT $id as user,id,`group`,
 				(SELECT IF(COUNT(1)>0,1,0)
@@ -323,6 +308,7 @@ class Exjs implements \Infosyspro\RestInterfaceClasses
         return $this->_getQuery($sql);
     }
     
+ 
     protected function getModuleByName($data ) {        
         return $this->_getQuery( $sql = 'SELECT * FROM OfficeActions WHERE module="' . $data['module'] .'"');
     }
@@ -340,6 +326,17 @@ class Exjs implements \Infosyspro\RestInterfaceClasses
 	$ln = include APPLICATION_PATH . '/public/media/myofficeapps/client/languages/en.json' ;
 	$data = str_replace ( "'" , '"' , $ln['lan'] ) ;
        return json_decode($data , true);
+    }
+    
+    protected function _updateResult($count)
+    {
+        
+       if($count > 0 ) {
+             return array ('success' => true, 'msg' => 'Saved  ' . $count . '.');
+        } else {
+           return array ('success' => false, 'msg' => 'Failed to save data');
+           
+        }
     }
 }
 

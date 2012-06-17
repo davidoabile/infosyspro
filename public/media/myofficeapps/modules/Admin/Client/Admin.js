@@ -459,7 +459,8 @@ Ext.define('MyDesktop.Modules.Admin.Client.Admin', {			// 1.- Steep One define t
                 url: '/myofficeapps/api',
                 method:'GET',
                 extraParams: { 
-                    object: 'Users_getModuleByName'                   
+                    object: 'Office_ListActionsGroups',
+                    module : 'Admin'
                 },	
                 reader: {
                     type : 'json',
@@ -499,7 +500,7 @@ Ext.define('MyDesktop.Modules.Admin.Client.Admin', {			// 1.- Steep One define t
                 url: '/myofficeapps/api',
                 method:'GET',
                 extraParams: { 
-                    object: 'Office_listUserGroups'
+                    object: 'Office_ListModulesInAGroup'
                    
                 },	
                 reader: {
@@ -517,12 +518,11 @@ Ext.define('MyDesktop.Modules.Admin.Client.Admin', {			// 1.- Steep One define t
             autoLoad: false,
             proxy : {
                 type: 'ajax',
-                url: 'ExtDesk.php',
+                url: '/myofficeapps/api',
                 method:'GET',
                 extraParams: { 
-                    Module: 'Admin',
-                    option: 'ActionsinGroups',
-                    action:'List'
+                     module: 'Admin',
+                    object: 'Office_ListResourceRoles'
                 },	
                 reader: {
                     type : 'json',
@@ -542,7 +542,7 @@ Ext.define('MyDesktop.Modules.Admin.Client.Admin', {			// 1.- Steep One define t
                 url: '/myofficeapps/api',
                 method:'GET',
                 extraParams: { 
-                    object: 'Office_GetUserGroup'
+                    object: 'Office_GetUserGroups'
                    
                 },	
                 reader: {
@@ -632,7 +632,7 @@ Ext.define('MyDesktop.Modules.Admin.Client.Admin', {			// 1.- Steep One define t
     
     /*** Generic Fuctions to work with grids***/
     
-    saveGrid : function(gridName,url,module,option,action,extraParam){
+    saveGrid : function(gridName,url,module,method, extraParam){
         var me=this;
         //Obtain the grid
         var grid = Ext.getCmp(gridName);
@@ -670,11 +670,9 @@ Ext.define('MyDesktop.Modules.Admin.Client.Admin', {			// 1.- Steep One define t
             // We call Ajax method
             Ext.Ajax.request({
                 url: url,
-                method:'GET',
+                method: method,
                 params: {
-                    Module : module,
-                    option : option,
-                    action : action,
+                    object : module,                             
                     jsonp :json
                 },
                 success: function(response){
@@ -690,11 +688,11 @@ Ext.define('MyDesktop.Modules.Admin.Client.Admin', {			// 1.- Steep One define t
                             }
 				        	
                         }else{
-                            Ext.Msg.alert(module, this.lang["server_error"]+'<b>'+resp.msg+'</b>')
+                            Ext.Msg.alert(module, "server_error"+'<b>'+resp.msg+'</b>')
                         }			       		
                     }else{
                         Ext.MessageBox.hide();
-                        Ext.Msg.alert(module, this.lang["server_error"])
+                        Ext.Msg.alert(module, "server_error")
                     }		        
 			        			        
                 }
@@ -723,14 +721,13 @@ Ext.define('MyDesktop.Modules.Admin.Client.Admin', {			// 1.- Steep One define t
         });
     },
     
-    deleteGrid : function(gridName,url,module,option,action){
+    deleteGrid : function(gridName,url,module,method){
         var me=this;	
         //Obtain the grid
         var grid=Ext.getCmp(gridName);
         //Obtain the selection
         var selection = grid.getView().getSelectionModel().getSelection()[0];
-    	
-		
+    	   
         //if we have a selectión active
         if (selection) {
             //Create a cool mask
@@ -746,12 +743,11 @@ Ext.define('MyDesktop.Modules.Admin.Client.Admin', {			// 1.- Steep One define t
         //send the id to the server to kill
         Ext.Ajax.request({
             url: url,
-            method:'GET',
+            method: method,
             params: {
                 id : selection.data.id,
-                Module : module,
-                option : option,
-                action : action			        
+                object : module
+                		        
             },
             success: function(response){
                 var text = response.responseText;
@@ -761,7 +757,7 @@ Ext.define('MyDesktop.Modules.Admin.Client.Admin', {			// 1.- Steep One define t
                     grid.getStore().remove(selection)	
                 }else{
                     Ext.MessageBox.hide();
-                    Ext.Msg.alert(module, this.lang["server_error"]+'<b>'+resp.msg+'</b>')
+                    Ext.Msg.alert(module, "server_error"+'<b>'+resp.msg+'</b>')
                 }
 			        		        
             }
@@ -1295,8 +1291,10 @@ openModulesTab : function(opt){
         Ext.getCmp('idAdminModulesGrid').on('select',me.updateActions,this);
         //first obtain the module,who calls the update
         me.storeActions.on('beforeload',function(st){
-            var module=Ext.getCmp("idAdminModulesGrid").getSelectionModel().selected.items[0].data.name;
+            var module=Ext.getCmp("idAdminModulesGrid").getSelectionModel().selected.items[0].data.js;
+             var id=Ext.getCmp("idAdminModulesGrid").getSelectionModel().selected.items[0].data.id;
             st.proxy.extraParams.module=module;
+            st.proxy.extraParams.id=id;
         },this);
 			
         var tab0 = Ext.getCmp('adminTabPanel');
@@ -1646,11 +1644,10 @@ openGroupsTab: function(opt){
 },
 
 saveGroups : function(opt){
-    var me=this;
-    var me=this;
-    me.saveGrid('idAdminGroupsGrid','ExtDesk.php','Admin','Groups','Save');
+    var me=this;   
+    me.saveGrid('idAdminGroupsGrid','/myofficeapps/api','Office_SaveGroups','PUT');
 },
-    
+
 addGroups : function(opt){
     var me=this;
     var record = Ext.create('AdminGroups',{
@@ -1679,7 +1676,7 @@ deleteGroups : function(opt){
         icon : Ext.Msg.QUESTION,
         fn : function(btn, text){
             if (btn == 'yes'){
-                me.deleteGrid('idAdminGroupsGrid','ExtDesk.php','Admin','Groups','Delete')   
+                me.deleteGrid('idAdminGroupsGrid','/myofficeapps/api','Office_DeleteGroups','DELETE')   
             }
         }
     });    	

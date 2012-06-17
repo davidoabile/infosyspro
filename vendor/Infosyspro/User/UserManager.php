@@ -229,7 +229,7 @@ class UserManager implements RestInterfaceClasses
      * @param init $id
      * @return boolean 
      */
-    public function delete ( $id )
+    public function delete ( $id, Array $data )
     {
 	$currentUser = self::$authAdapter->getIdentity () ;
 	if ( $currentUser->id == $id ) {

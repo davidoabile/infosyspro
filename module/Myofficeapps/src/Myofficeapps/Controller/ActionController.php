@@ -77,7 +77,7 @@ use Zend\Mvc\Controller\RestfulController as ZendActionController,
         } else {
 	    
         	$data = $request->query()->toArray();
-		//var_dump($request->getMethod()); exit;
+		//var_dump($data); exit;
             // RESTful methods
             switch (strtolower($request->getMethod())) {
                 case 'get':
@@ -105,6 +105,8 @@ use Zend\Mvc\Controller\RestfulController as ZendActionController,
                     $return = $this->update($id, $parsedParams);
                     break;
                 case 'delete':
+		    $content = $request->getContent();
+                    parse_str($content, $data);
                 	
                     if (null === $id = $routeMatch->getParam('id') && empty($data['dc'])) {
                         if (!($id = $request->query()->get('id', false))) {

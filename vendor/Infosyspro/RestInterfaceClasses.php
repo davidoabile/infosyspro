@@ -14,5 +14,5 @@ interface RestInterfaceClasses
     public  function getList( Array $data );
     public  function update(  $id, Array $data );
     public  function create (Array $data );
-    public  function delete( $id );
+    public  function delete( $id, Array $data );
 }

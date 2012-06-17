@@ -124,7 +124,7 @@ class MyofficeappsController extends ActionController {
      * @return mixed
      */
     public function create($data) {
-
+vsr_dump($data); exit;
         if (count($data) < 1) {
             $data = $GLOBALS['HTTP_RAW_POST_DATA'];
         }
@@ -159,7 +159,34 @@ class MyofficeappsController extends ActionController {
      * @return mixed
      */
     public function update($id, $data) {
-        var_dump($data);
+        if(isset($data['jsonp'])) {
+            $queryData = json_decode($data['jsonp'], true);           
+            $id = $queryData[0]['id']; // Just a dummy won't be used in case we are using a batch
+        }
+       
+        if ($id  < 0 ) {
+            echo $this->output;
+        } else {
+            //Expects a name spaced method CLASSNAME 
+
+            if (!empty($data['object'])) {
+                $result = null;
+
+                $classMethod = explode('_', $data['object']);
+
+                $object = 'get' . $classMethod[0];
+
+                if (method_exists($this->company, $object)) {
+                    unset($data['object']);
+                    $queryData['method'] = lcfirst($classMethod[1]);
+
+                    $result = $this->company->$object()->update($id, $queryData);
+                }
+
+                return $this->_response($result);
+            } 
+        }
+      
         return $this->getResponse();
     }
 
@@ -170,19 +197,27 @@ class MyofficeappsController extends ActionController {
      * @return mixed
      */
     public function delete($id, $data) {
-        $table = $data['router'];
-        if (count($data) < 1 || !empty($data['_dc'])) {
-            //$data = $GLOBALS['HTTP_RAW_POST_DATA'];    		
-            $data = file_get_contents("php://input");
-            $data = json_decode($data, true);
-            //parse_str($input, $data);
-        }
+	
+         if ( $data['id'] ) {          
+           
+            if (!empty($data['object'])) {
+                $result = null;
 
-        //$data = $GLOBALS['HTTP_RAW_POST_DATA'];
-        //var_dump($data);exit;
-        $this->_delete($data, $table);
+                $classMethod = explode('_', $data['object']);
 
-        return $this->getResponse();
+                $object = 'get' . $classMethod[0];
+
+                if (method_exists($this->company, $object)) {
+                    unset($data['object']);
+                    $data['method'] = lcfirst($classMethod[1]);
+
+                    $result = $this->company->$object()->delete($id, $data);
+                }
+
+                return $this->_response($result);
+            } 
+	}
+        return $this->_response();
     }
 
     /**
@@ -244,7 +279,7 @@ class MyofficeappsController extends ActionController {
      * 
      * @param mixture $data 
      */
-    protected function _response($data) {
+    protected function _response($data = false) {
             if (!empty($data)) {
                 $response = $data;
                 

@@ -545,11 +545,11 @@ Ext.define('Ext.ux.desktop.Desktop', {
    },
 
    getViewHeight : function(){
-      return (Ext.lib.Dom.getViewHeight() - this.getTaskbarHeight());
+      return (Ext.Element.getViewHeight() - this.getTaskbarHeight());
    },
 
    getViewWidth : function(){
-      return Ext.lib.Dom.getViewWidth();
+      return Ext.Element.getViewWidth();
    },
 
    getWinWidth : function(){
@@ -566,14 +566,14 @@ Ext.define('Ext.ux.desktop.Desktop', {
     * @param {integer} width The width.
     */
    getWinX : function(width){
-      return (Ext.lib.Dom.getViewWidth() - width) / 2
+      return (Ext.Element.getViewWidth() - width) / 2
    },
 
    /**
     * @param {integer} height The height.
     */
    getWinY : function(height){
-      return (Ext.lib.Dom.getViewHeight() - this.getTaskbarHeight() - height) / 2;
+      return (Ext.Element.getViewHeight() - this.getTaskbarHeight() - height) / 2;
    }
 	
 });

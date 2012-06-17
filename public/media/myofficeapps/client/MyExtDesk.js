@@ -246,9 +246,9 @@ Ext.define('MyDesktop.MyExtDesk', {
 				    Ext.Msg.confirm(lan["error"],lan["bad_login"],
 					function(btn, text){
 					    if (btn == 'yes'){
-						Ext.getCmp('idLoginUser').setValue("");
+						
 						Ext.getCmp('idLoginPswd').setValue("");	
-						Ext.getCmp('idLoginUser').focus('', 200);
+						Ext.getCmp('idLoginPswd').focus('', 200);
 					    } else {
 						var url = window.location.href;
 						var nohttp = url.split('//')[1];
@@ -257,7 +257,7 @@ Ext.define('MyDesktop.MyExtDesk', {
 					    }
 													
 					},this);
-				//MyExtDesk.login(); //Ext.Msg.alert('Failed', action.result.msg); 
+				///Ext.Msg.alert('Failed', action.result.msg); 
 				}
 	
 			    })

@@ -65,16 +65,6 @@ class InfosysproLib extends AbstractDataManager
                                      ->set($title);    
     }
     
-   
-    /**
-     * A namespace model name to retrieve
-     * This will return an object Zend\Db\TableGateway\AbstractTableGateway
-     * @param string $model
-     * @return \Infosyspro\model
-     */
-    public function getModel( $model ) {
-	return new $model( $this->getAdapter() );
-    }
     public function setHeadLink( $method, $options = array()) 
     {        
        //$view->plugin('headlink')->appendStylesheet('/styles/basicss.css'); OR
