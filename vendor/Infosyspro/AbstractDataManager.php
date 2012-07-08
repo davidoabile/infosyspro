@@ -46,7 +46,7 @@ abstract class AbstractDataManager
     
     
     protected  $adapter;
-    
+    protected $aclManager;
     protected $userSession = null;
     protected $language = null;
    protected $articleLib = null;
@@ -72,7 +72,7 @@ abstract class AbstractDataManager
     protected $config = null;
     protected $office = null;
     
-
+    protected $menu = null;
     /**
      * initial all objects View and the $locator
      * from the application instance
@@ -112,7 +112,6 @@ abstract class AbstractDataManager
 	 * @see Zend\Session
 	 *
 	 * @return Zend\Session object
-	 * @since   1.0
 	 *
 	 */
 	
@@ -148,6 +147,25 @@ abstract class AbstractDataManager
 	     $this->office = new Exjs\Exjs($this);
 	 }
 	 return $this->office;
+     }
+     
+     public function getAcl() {
+	 if( !$this->aclManager instanceof Acl\AclManager ) {
+	     $this->aclManager = new Acl\AclManager($this);
+	 }
+	 return $this->aclManager;
+     }
+     
+     
+     /**
+      * Get the menu object
+      * @return object menu
+      */
+     public function getMenu(){
+	 if( !$this->menu instanceof Menu\Menu ) {
+	     $this->menu = new Menu\Menu($this);
+	 }
+	 return $this->menu;
      }
      public function getAdapter() {
 	 if( null === $this->adapter) {

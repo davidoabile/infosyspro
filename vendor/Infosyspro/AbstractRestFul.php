@@ -12,6 +12,7 @@ class AbstractRestFul implements RestInterfaceClasses
     {
 	$this->infosyspro = $infosyspro ;
 	$this->user = $infosyspro->getUsers() ;
+        $this->init();
     }
 
     public function create ( Array $data )
@@ -58,6 +59,8 @@ class AbstractRestFul implements RestInterfaceClasses
     {
 	return $this->_checkMethodIfExists($data);
     }
+    
+    public function init() {}
     
     protected function _checkMethodIfExists ( $data ) {
 	//check which method has been called

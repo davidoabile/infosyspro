@@ -139,7 +139,7 @@ class ModuleConfig implements \Infosyspro\RestInterfaceClasses
      * @param init $id
      * @return boolean 
      */
-    public function delete ( $id )
+    public function delete ( $id , Array $data)
     {
 	$this->mysql->delete($id);
     }

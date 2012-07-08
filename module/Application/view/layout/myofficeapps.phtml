@@ -3,7 +3,7 @@
     <head>
 
         <noscript>
-        <meta http-equiv="refresh" runat="server" content="0;/media/myofficeapps/noscript/index.php" />
+        <meta http-equiv="refresh" runat="server" content="0;/jsfrw/myofficeapps/noscript/index.php" />
         </noscript>
               
         <!--
@@ -13,20 +13,22 @@
         
         <title>My Online Office</title>
 	
-        <link rel="stylesheet" type="text/css" href="/media/myofficeapps/extjs/resources/css/ext-all-blue.css" id="idTheme" />
-        <link rel="stylesheet" type="text/css" href="/media/myofficeapps/resources/css/desktop.css" />
+        <link rel="stylesheet" type="text/css" href="/jsfrw/myofficeapps/extjs/resources/css/ext-all-blue.css" id="idTheme" />
+        <link rel="stylesheet" type="text/css" href="/jsfrw/myofficeapps/resources/css/desktop.css" />
         <!--<script type="text/javascript" src="../../builds/ext-core.js"></script>
         <script type="text/javascript" src="classes.js"></script>-->
-        <script type="text/javascript" src="/media/myofficeapps/extjs/ext-all-debug.js"></script>
+        <script type="text/javascript" src="/jsfrw/myofficeapps/extjs/ext-all-debug.js"></script>
 <!--        <script type="text/javascript" src="extjs/ext-locale-loader.js"></script> -->
+	<script type="text/javascript" src="/jsfrw/myofficeapps/ckeditor/ckeditor.js"></script>
+     
         <script type="text/javascript">
 
 			Ext.Ajax.disableCaching = false;
             Ext.Loader.setConfig({enabled:true});
             Ext.Loader.setPath({
-                'Ext.ux.desktop'   : '/media/myofficeapps/client/js',
-                'MyDesktop'        : '/media/myofficeapps/client',
-                'MyDesktop.Modules': '/media/myofficeapps/modules'
+                'Ext.ux.desktop'   : '/jsfrw/myofficeapps/client/js',
+                'MyDesktop'        : '/jsfrw/myofficeapps/client',
+                'MyDesktop.Modules': '/jsfrw/myofficeapps/modules'
             });
 /*            Ext.Loader.setLocale({
                 enabled: true,
@@ -57,6 +59,7 @@
 
     </head>
     <body>
+        
         <div id="loading">
             <span class="title"> </span>
             <span class="logo"> </span>

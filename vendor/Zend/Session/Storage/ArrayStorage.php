@@ -230,6 +230,7 @@ class ArrayStorage extends ArrayObject implements StorageInterface
                 // unset($this['__ZF'][$key]) led to "indirect modification...
                 // has no effect" errors, so explicitly pulling array and 
                 // unsetting key.
+               
                 $array = $this['__ZF'];
                 unset($array[$key]);
                 $this['__ZF'] = $array;
@@ -250,6 +251,7 @@ class ArrayStorage extends ArrayObject implements StorageInterface
                 $this['__ZF'][$key] = $value;
             }
         }
+       
         return $this;
     }
 
@@ -264,6 +266,7 @@ class ArrayStorage extends ArrayObject implements StorageInterface
      */
     public function getMetadata($key = null)
     {
+  
         if (!isset($this['__ZF'])) {
             return false;
         }

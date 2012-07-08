@@ -56,11 +56,14 @@
       */
      public function render($options = null )
      {
-         $params = array();
+         $params = $options['params'];
+	 unset($options['params']);
         
-         if(isset($options['params'])) {
+        /* if(isset($options['params'])) {
             $params = json_decode(str_replace("'",'"',$options['params']), true);
          }
+	 * 
+	 */
          
          if (array_key_exists('function', $options)) {
              return $this->$options['function']($params);

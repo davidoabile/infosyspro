@@ -17,7 +17,16 @@ class MyofficeappsController extends ActionController {
     protected function init() {
         $this->lang = $this->locator->get('translator');
         $this->user = $this->company->getUsers();
-
+       // $_SESSION['name'] = 'test';
+       // var_dump($this->company->getSession()->getKey('acl')); exit;
+        /* if(! $acl = $this->company->getSession()->getKey('acl')) {
+             $acl = $this->company->getAcl();
+         } else {
+             var_dump($this->company->getSession());
+         }*/
+       // var_dump($this->company->getSession());
+     //   var_dump($acl->isAllowed('guest', 'home', 'edit'));
+//exit;
         if ($this->request->getRequestUri() !== '/myofficeapps' && !$this->request->query()->get('auth')) {
             if (!$this->user->isLoggedIn()) {
                  $this->_response($this->company->getOffice()->loadUser());
@@ -123,32 +132,29 @@ class MyofficeappsController extends ActionController {
      * @param  mixed $data
      * @return mixed
      */
-    public function create($data) {
-vsr_dump($data); exit;
-        if (count($data) < 1) {
-            $data = $GLOBALS['HTTP_RAW_POST_DATA'];
-        }
+    public function create ( $query )
+    {
 
-        //Expects a name spaced method NAMESPACE_CLASSFOLDER_CLASSNAME
-        $classLocation = explode('_', $data['object']);
-        if (sizeof($classLocation) == 4) {
-            $result = '';
-            $object = null;
-            $class = $classLocation[0] . '\\' . $classLocation[1] . '\\' . $classLocation[2];
+	if ( count( $query ) == 0 ) {
+	    $query = (array) json_decode(file_get_contents('php://input'));;
+	}
+	if ( !empty( $query[ 'object' ] ) ) {
+	    $result = null ;
 
-            if (class_exists($class)) {
-                if ($classLocation[1] === 'User') {
-                    $object = $this->user;
-                } else {
-                    $object = new $class($this->locator);
-                }
+	    $classMethod = explode( '_', $query[ 'object' ] ) ;
 
-                $result = $object->create($data);
-            }
-            echo $this->_response($result);
-        }
+	    $object = 'get' . $classMethod[ 0 ] ;
 
-        return $this->getResponse();
+	    if ( method_exists( $this->company, $object ) ) {
+		unset( $query[ 'object' ] ) ;
+		$query[ 'method' ] = lcfirst( $classMethod[ 1 ] ) ;
+
+		$result = $this->company->$object()->get( $query[ 'id' ], $query ) ;
+	    }
+
+	    return $this->_response( $result ) ;
+	}
+	return $this->getResponse() ;
     }
 
     /**
@@ -197,6 +203,7 @@ vsr_dump($data); exit;
      * @return mixed
      */
     public function delete($id, $data) {
+	//$params = json_decode(file_get_contents('php://input'));
 	
          if ( $data['id'] ) {          
            

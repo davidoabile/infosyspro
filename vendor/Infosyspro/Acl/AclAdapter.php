@@ -27,9 +27,6 @@
 
 namespace Infosyspro\Acl;
 
-use Zend\Acl as ZendAcl,
-        Zend\Db\Table\Table as ZendTable;
-
 /**
  * Class for connecting to SQL databases and performing common operations.
  *
@@ -44,76 +41,76 @@ use Zend\Acl as ZendAcl,
  */
 class AclAdapter {
 
- protected $table;
+ protected $adapter;
     
-  public function __construct(ZendTable $dbAdapter)
+  public function __construct(\Zend\Db\Adapter\Adapter $adapter)
   {
-      $this->table = $dbAdapter;
+      $this->adapter = $adapter;
   }
   
-  public function setDbAdapter($adapter)
-  {
-      $this->table = $dbAdapter;
-  }
   
-  public function getAclRoles($config = array('name' => 'TbAclRoles')) 
+  public function getAclRoles() 
   {
-       return $this->getAcl($config);
-  }
-  
-  public function getAclResources($config = array('name' => 'TbAclResources'))
-  {
-       return $this->getAcl($config);
-  }
-  
-  public function getAclRolesResources($config = array('name' => 'TbAclRolesResources'))
-  {
-       return $this->_getRoleResource($config);
-  }
-  
-  protected function getAcl($config)
-  {
-      $result = array();
-      
-      $this->table->setOptions($config);
-      $data = $this->table->fetchAll();
+      if(!$this->adapter instanceof \Zend\Db\Adapter\Adapter){
+	  return false;	  
+      }
+        $result = array();
+	$table = new Models\TbAclRoles($this->adapter); 
+     
+      $data = $table->fetchAll();
       foreach ($data as $role) {
           if ($role->inheritsFrom_id) {
-              $row = $this->table->find($role->inheritsFrom_id);
-              $result[$role->id]['parent'] = $row[0]->name; 
+              $row = $table->find($role->inheritsFrom_id);              
+              $result[$role->id]['parent'] = $row->name; 
           }
           $result[$role->id]['name'] = $role->name;
       }
       return $result;
   }
   
-   protected function _getRoleResource($config)
+  public function getAclResources()
   {
-      $result = array();
+      if(!$this->adapter instanceof \Zend\Db\Adapter\Adapter){
+	  return false;	  
+      }
+        $result = array();
+      $table = new Models\TbAclResources($this->adapter);      
+      $data = $table->fetchAll();
+      foreach ($data as $role) {
+          if ($role->inheritsFrom_id) {
+              $row = $table->find($role->inheritsFrom_id);
+              $result[$role->id]['parent'] = $row->name; 
+          }
+          $result[$role->id]['name'] = $role->name;
+      }
+      return $result;
+  }
+  
+  public function getAclRolesResources()
+  {
+      if(!$this->adapter instanceof \Zend\Db\Adapter\Adapter){
+	  return false;	  
+      }
       
-      $this->table->setOptions($config);
-      $table = clone $this->table;
+       $result = array();
+      $table = new Models\TbAclRolesResources($this->adapter);
+      $tbAclRoles = new Models\TbAclRoles($this->adapter);
+      $tbAclResources = new Models\TbAclResources($this->adapter);
       
-      $data = $this->table->fetchAll();
+      $data = $table->fetchAll();
       foreach ($data as $role) {
           if ($role->acl_resource_id) {
-              $table->setOptions(array('name' => 'TbAclResources'));              
-              
-              $row = $table->find($role->acl_resource_id);
-              $result[$role->id]['resource'] = $row[0]->name; 
+              $row = $tbAclResources->find($role->acl_resource_id);
+              $result[$role->id]['resource'] = $row->name; 
           }
-          
           if ($role->acl_role_id) {
-              $table->setOptions(array('name' => 'TbAclRoles'));              
-              
-              $row = $table->find($role->acl_role_id);
-              $result[$role->id]['role'] = $row[0]->name; 
+             $row = $tbAclRoles->find($role->acl_role_id);
+              $result[$role->id]['role'] = $row->name; 
           }
           
           $result[$role->id]['privilege'] = $role->privilege;
       }
       return $result;
   }
-  
 }
 

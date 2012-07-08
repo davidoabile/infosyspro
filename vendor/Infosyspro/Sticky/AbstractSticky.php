@@ -47,9 +47,11 @@
      protected $db;
      protected $menuid = null;
      
-     public function __construct( \Infosyspro\InfosysproLib $company, $menuid ='' )
+     public function __construct( \Infosyspro\InfosysproLib $company = null, $menuid ='' )
      {
+	 if ( null === $company ) return false;
          $this->company = $company;
+	// var_dump($this->company->getAdapter()); exit;
           $this->db =  $company->getAdapter();
           $this->menuid = $menuid;
      }
@@ -61,11 +63,14 @@
       */
      public function render($options = null )
      {
-         $params = array();
-        
-         if(isset($options['params'])) {
+        // $params = array();
+         $params = $options['params'];
+	 unset($options['params']);
+        /* if(isset($options['params'])) {
             $params = json_decode(str_replace("'",'"',$options['params']), true);
          }
+	 * 
+	 */
          
          if (array_key_exists('function', $options)) {           
              return $this->$options['function']($params);

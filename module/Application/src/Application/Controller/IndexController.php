@@ -10,6 +10,7 @@ class IndexController extends ActionController
     public function init()
     {
         $this->table = $this->company->getModel('Application\\Model\\TbContent');
+	//$this->layout()->company = $this->company;
     }
 
     public function indexAction()
@@ -20,11 +21,10 @@ class IndexController extends ActionController
             return $this->_getOfflineMsg();
         }
         //
-        $this->layoutParams['data'] = $this->_getContent(1);      
-    //$this->company->getSession()->setKey('message', array('type' => 'message',  'message' =>'Not found here please try again later'));
-        // $view = new ViewModel();
-        //$view->setTemplate('bar/do-something');
-        return  $this->layoutParams;
+      //  $this->layoutParams['data'] = $this->_getContent(1);      
+        $this->layout()->template =  $this->layoutParams['template'];  
+	$this->layout()->company = $this->company;
+        return new ViewModel(array( 'data' => $this->_getContent(1)));
     }
 
     public function registerAction()

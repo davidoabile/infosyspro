@@ -53,48 +53,48 @@
      );
 
      
-     public function toolbar()
+     public function getToolbar()
      {
         // $noodle = '<div id="home-button"><a class="home-button-desc" href="/">Home</a></div>';
         // $noodle .= '<div id="login-button"><a class="login-button-desc" href="#"><span>Login</span></a></div>';
          return '';
      }
 
-     public function newsFlash()
+     public function getNewsFlash()
      {
          return false;
      }
 
     
-     public function breadcrumb()
+     public function getBreadcrumb()
      {
          return '<a class="pathway" href="/">Home</a>/ Features';
      }
 
     
-     public function bottomMenu()
+     public function getBottomMenu()
      {
          
      }
 
-     public function scroller()
+     public function getScroller()
      {
          
      }
      
-     public function logo()
+     public function getLogo()
      {
          return false;
      }
      
-     public function  userTopMenu() {
+     public function  getUserTopMenu() {
             return $this->_getDataFromDb(array('fields' => 'content',
                                             'table' => 'TbBlocks',
                                             'where' => 'WHERE position="userTopMenu" AND published=1'
                                      ));
      }
      
-     public function topMenu() {
+     public function getTopMenu() {
          return $this->_getDataFromDb(array('fields' => 'content',
                                             'table' => 'TbBlocks',
                                             'where' => 'WHERE position="topMenu" AND published=1'
@@ -102,7 +102,7 @@
      }
      
      
-     public function shoppingCart()
+     public function getShoppingCart()
      {
           //<div id="cart-button"><a href="#" class="cart-button-desc<?php echo $cart; ">
          // $this->lang->translate('cart') .' ' . $totalString; </a></div>
@@ -230,9 +230,7 @@
      {
          $blocksCount = new \stdClass();
          $where = '';
-          $adapter = $this->locator->get('Db');
-      
-       
+         
          if (empty($in)) {
              $where = " AND position = '{$options['name']}'";
          } else {
@@ -245,13 +243,10 @@
                 WHERE published = 1 AND menuid = '{$this->menuid}' {$where}
                 ORDER BY tb.position ASC";
  
-        $statement = $adapter->createStatement($sql);
-        $result = $statement->execute();
-        $row = $result->getResource();
-          
-       $blocks = $row->fetchAll(\PDO::FETCH_OBJ);
+         \Infosyspro\Traits\QuickSQL::processQuery($sql, $this->db);
        
-         return $blocks;
+       
+         return \Infosyspro\Traits\QuickSQL::getResults();
      }
      
      protected function _getDataFromDb(array $options)
@@ -268,17 +263,16 @@
                  . ' ' . $where . ' ' . $order;
  
        //   echo $sql; exit;
-        $statement = $adapter->createStatement($sql);
-        $result = $statement->execute();
-        $row = $result->getResource();
-          
-        $data = $row->fetchAll(\PDO::FETCH_OBJ);
+        \Infosyspro\Traits\QuickSQL::processQuery($sql, $this->db);
+       
+       
+         $data = \Infosyspro\Traits\QuickSQL::getResults();
        
         $contents = '';
         
-       if($data) {
+       if(sizeof($data) > 0 ) {
         /* Render block defined classes */
-        $contents = $data[0]->content;
+	   if(isset($data->content))   $contents = $data->content;
         
               if (!empty($data->module)) {
                  $name = 'Infosyspro\\AbstractBlocks\\' . $data->module;

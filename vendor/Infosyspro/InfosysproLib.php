@@ -57,6 +57,14 @@ class InfosysproLib extends AbstractDataManager
      */
     protected $user = null;
     
+    protected static $instance = null;
+    
+    public static function getInstance(){
+	if(null === self::$instance) {
+	    self::$instance = $this->locator->get('company');
+	}
+	return self::$instance;
+    }
     
     public function setPageTitle( $title = 'No Title Set') 
     {

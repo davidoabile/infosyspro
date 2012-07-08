@@ -1,12 +1,14 @@
 <?php
 // no direct access
-var_dump($template);
+
 $fontstyle = 'f-default';
 $tstyle = 'light-green';
 $mtype = 'module';
 $subnav = '';
 // these must come below because the styles can be overloaded
 $body_style = 'light';
+
+$stickies = new \Infosyspro\Sticky\Blocks($this->company, $this->template->menuid);
 
 ?>
 
@@ -62,10 +64,10 @@ $body_style = 'light';
                                         <div class="rt-menubar">
                                         
                                            <?php if ($this->template->showUserTopMenu == 'true') : ?>
-                                             <odoc:include type="Sticky" name="Blocks" function="userTopMenu" />
+                                             <?php echo $stickies->render(array('function'=>'getUserTopMenu','params'=>array())); ?>
                                             <?php endif ?>
                                             <?php if ($this->template->showTopMenu == 'true') : ?>
-                                             <odoc:include type="Sticky" name="Blocks" function="topMenu" />
+                                             <?php echo $stickies->render(array('function'=>'getTopMenu','params'=>array())); ?>
                                             <?php endif ?>
                                         <div class="arrow-indicator" style="left: 414px;"></div>
                                     </div>					<div class="clear"></div>
@@ -168,13 +170,13 @@ $body_style = 'light';
                 <div class="wrapper">
 <?php if (isset($this->template->moduleCount->advertisement)) : ?>
                         <div class="ad-module-top">
-                            <odoc:include type="Sticky" name="Blocks" function="getBlock" params="{'name' :'advertisement'}" />
+                            <?php echo $stickies->render(array('function'=>'getBlock','params'=>array('name' => 'advertisement'))); ?>
                         </div>
 <?php endif; ?>
 
 <?php if ($this->template->showLogo == 'false') : ?>
                     <div class="logo-module">
-                        <odoc:include type="Sticky" name="Blocks" function="logo" />
+                         <?php echo $stickies->render(array('function'=>'getLogo','params'=>array())); ?>
                     </div>
 <?php elseif ($this->template->showLogo == "true") : ?>
                     <a href="<?php echo $this->baseurl; ?>" id="logo">
@@ -188,7 +190,7 @@ $body_style = 'light';
 <?php if ($mtype != "module") : ?>
                         <?php echo $topnav; ?>
                         <?php else: ?>
-                                    <odoc:include type="Sticky" name="Blocks" function="toolbar" />
+                                    <?php echo $stickies->render(array('function'=>'getToolbar','params'=>array())); ?>
 <?php endif; ?>
                                 </div>
 <?php endif; ?>
@@ -208,7 +210,7 @@ $body_style = 'light';
                                                         <div id="login-panel-surround" class="png">
                                                             <div id="login-panel" class="png">
                                                                 <div id="login-module">
-                                                                    <odoc:include type="Sticky" name="Blocks" function="getBlock" params="{'name' :'login'}" />
+                                                                     <?php echo $stickies->render(array('function'=>'getBlock','params'=>array('name' => 'login'))); ?>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -220,16 +222,13 @@ $body_style = 'light';
                                                                         <div class="show-br"></div>
                                                                         <div id="showcase">
                                                                             <div id="showcase2">
-                                                                                <odoc:include type="Sticky" name="Blocks" function="scroller" params="{'style': 'scroller'}" />
+                                                                                 <?php echo $stickies->render(array('function'=>'getScroller','params'=>array('style' => 'scroller'))); ?>
                                                                             </div>
                                                                         </div>
                                                                         <div class="show-bl"></div>
                                                                     </div>
 <?php endif; ?>
                                                                     <!--End Showcase-->
-
-
-                                                                    <div class="sec-div"></div>
 
                                                                     <!--Begin Main Content Block-->
 
@@ -250,8 +249,7 @@ $body_style = 'light';
 <?php if (isset($this->template->moduleCount->user1) || isset($this->template->moduleCount->user2) || isset($this->template->moduleCount->user3)) : ?>
                                                                                                                 <div id="mainmodules2" class="spacer<?php echo $this->setUp->mainUserWidth; ?>">
 
-                                                                            <odoc:include type="Sticky" name="Blocks" function="getBlock" params="{'name':'topBlock' , 'style' : 'main'}" />
-
+                                                                            <?php echo $stickies->render(array('function'=>'getBlock','params'=>array('name' => 'topBlock', 'style' => 'main'))); ?>
 
                                                                         </div>
 <?php endif; ?>
@@ -260,7 +258,7 @@ $body_style = 'light';
                                                                                 <div class="moduletable">
                                                                                     <h3>Breadcrumbs</h3>
                                                                                     <span class="breadcrumbs pathway">
-                                                                                        <odoc:include type="Sticky" name="Blocks" function="breadcrumb" />
+                                                                                         <?php echo $stickies->render(array('function'=>'getBreadcrumb','params'=>array())); ?>
                                                                                     </span>
                                                                                 </div>
                                                                             </div>
@@ -269,16 +267,16 @@ $body_style = 'light';
                                                                             <div>
 <?php if (isset($this->template->moduleCount->inset)) : ?>
                                                                                     <div id="inset-block-right"><div class="right-padding">
-                                                                                            <odoc:include type="Sticky" name="Blocks" function="getBlock" params="{'name': 'inset'}" />
+                                                                                           <?php echo $stickies->render(array('function'=>'getBlock','params'=>array('name' => 'inset'))); ?>
                                                                                         </div></div>
 <?php endif; ?>
                                                                     <?php if (isset($this->template->moduleCount->inset2)) : ?>
                                                                                     <div id="inset-block-left"><div class="left-padding">
-                                                                                            <odoc:include type="Sticky" name="Blocks" function="getBlock" params="{'name': 'inset2' }" />
+                                                                                            <?php echo $stickies->render(array('function'=>'getBlock','params'=>array('name' => 'inset2'))); ?>
                                                                                         </div></div>
 <?php endif; ?>
                                                                                     <div id="maincontent-block">
-                                                                                        <odoc:include type="Sticky" name="MessageQueue" />
+                                                                                       <?php //echo $stickies->render(array('function'=>'getMessageQueue','params'=>array())); ?>
                                                                                         <div id="page" class="full-article">
 <?php echo $this->content; ?>
                                                                                         </div>
@@ -287,7 +285,7 @@ $body_style = 'light';
                                                                                 <div class="clr"></div>
 <?php if (isset($this->template->moduleCount->user4) || isset($this->template->moduleCount->user5) || isset($this->template->moduleCount->user6)) : ?>
                                                                             <div id="mainmodules2" class="spacer<?php echo $this->setUp->mainUser2Width; ?>">
-                                                                                            <odoc:include type="Sticky" name="Blocks" function="getBlock" params="{'name': 'middleMain' , 'style' : 'main'}" />
+                                                                                             <?php echo $stickies->render(array('function'=>'getBlock','params'=>array('name' => 'middleMain', 'style' => 'main'))); ?>
                                                                                         </div>
 <?php endif; ?>
                                                                                     </div>
@@ -302,15 +300,14 @@ $body_style = 'light';
                                                                             <div id="leftcol">
                                                                                 <div id="leftcol-bg">
 <?php if (isset($this->template->moduleCount->searchLeft)) : ?>
-                                                                                                            <odoc:include type="Sticky" name="Blocks" function="getBlock" params="{'name': 'search'}" />
+                                                                                                            <?php echo $stickies->render(array('function'=>'getBlock','params'=>array('name' => 'search'))); ?>
 <?php endif; ?>
                                                         <?php if ($subnav == "leftcol") : ?>
                                                                                                     <div class="sidenav-block">
 <?php echo $subnav; ?>
                                                                                                     </div>
 <?php endif; ?>
-                                                                                                <odoc:include type="Sticky" name="Blocks" function="getBlock" params="{'name': 'left'}" />
-
+                                                                                                <?php echo $stickies->render(array('function'=>'getBlock','params'=>array('name' => 'left'))); ?>
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
@@ -321,14 +318,14 @@ $body_style = 'light';
                                                                                                         <div class="col3">
                                                                                                             <div id="rightcol">
 <?php if (isset($this->template->moduleCount->searchRight)) : ?>                                                        
-                                                                                                                    <odoc:include type="Sticky" name="Blocks" function="getBlock" params="{'name': 'search'}" />
+                                                                                                                    <?php echo $stickies->render(array('function'=>'getBlock','params'=>array('name' => 'search'))); ?>
 <?php endif; ?>
                                                     <?php if ($subnav == "rightcol") : ?>
                                                                                                                 <div class="sidenav-block">
 <?php echo $subnav; ?>
                                                                                                                 </div>
 <?php endif; ?>                                                     
-                                                                                                            <odoc:include type="Sticky" name="Blocks" function="getBlock" params="{'name': 'right'}" />
+                                                                                                            <?php echo $stickies->render(array('function'=>'getBlock','params'=>array('name' => 'right'))); ?>
                                                                                                         </div>
                                                                                                     </div>
 <?php endif; ?> 
@@ -352,7 +349,7 @@ $body_style = 'light';
                                                                                             <div id="bottom-main">
                                                                                                 <div id="bottom-main2">
                                                                                                     <div id="mainmodules3" class="spacer<?php echo $this->setUp->mainUser3Width; ?>">
-                                                                                                                                <odoc:include type="Sticky" name="Blocks" function="getBlock" params="{'name': 'bottomMain', 'style' : 'main'}" />
+                                                                                                                                <?php echo $stickies->render(array('function'=>'getBlock','params'=>array('name' => 'bottomMain', 'style' => 'main'))); ?>
                                                                                                                             </div>
                                                                                                                         </div>
                                                                                                                         <div class="bottom-bl"></div>
@@ -370,12 +367,12 @@ $body_style = 'light';
                                                                                                                         <div id="bottom">
                                                                                                                             <div id="mainmodules4" class="spacer<?php echo $this->setUp->mainBottomWidth; ?>">
                                                                                                                                 <div class="block <?php echo @$this->template->moduleCount->bottomClass; ?>">
-                                                                                                                                    <odoc:include type="Sticky" name="Blocks" function="getBlock" params="{'name': 'bottomLow'}" />
+                                                                                                                                   <?php echo $stickies->render(array('function'=>'getBlock','params'=>array('name' => 'bottomLow'))); ?>
                                                                                                                                 </div>
                                                                                                                             </div>
                                                                                                                         </div>
 <?php endif; ?>
-                    <?php if (isset($this->template->moduleCount->bottomMenu) || $this->template->showBottomLogo == "true") : ?>
+                    <?php if (isset($this->template->moduleCount->bottomMenu) || @$this->template->showBottomLogo == "true") : ?>
                                                                                                                            <!-- <div id="footer">
                                                                                                                                 <div id="footer2">
                                                                                                                                     <div id="footer3">
@@ -384,7 +381,7 @@ $body_style = 'light';
 <?php endif; ?>
                                 <?php if (isset($this->template->moduleCount->bottomMenu)) : ?>
                                                                                                                                     <div id="bottom-menu">
-                                                                                                                                        <odoc:include type="Sticky" name="Blocks" function="bottomMenu"  />
+                                                                                                                                        <?php echo $stickies->render(array('function'=>'getBottomMneu','params'=>array())); ?>
                                                                                                                                     </div>
 <?php endif; ?>
                                                                                                                                 </div>
@@ -397,7 +394,7 @@ $body_style = 'light';
                                                                                                                       <!--  <div id="footerbar">
                                                                                                                             <div id="footerbar2">
                                                                                                                                 <div id="footerbar3">
-<?php if ($this->template->showCopyright == "true") : ?>
+<?php if (@$this->template->showCopyright == "true") : ?>
                                                                                                                                                     <div class="copyright-block">
                                                                                                                                                         <a href="http://infosyspro.com.au/" title="Infosyspro" id="rocket"></a>
                                                                                                                                                         <div id="copyright">

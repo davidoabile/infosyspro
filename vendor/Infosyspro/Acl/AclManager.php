@@ -28,7 +28,7 @@
 namespace Infosyspro\Acl;
 
 use Zend\Acl\Acl as ZendAcl,
-    Zend\Db\Table\Table as ZendTable;
+ Infosyspro\InfosysproLib;
 
 /**
  * Class for performing permissions.
@@ -50,21 +50,26 @@ class AclManager {
      */
     protected $roleAdapter = null;
 
-    public function __construct(ZendAcl $acl, $roleAdapter=null) {
-
-        $this->acl = $acl;
-
-        if (null === $roleAdapter) {
-            throw new Exception('Adapter parameters must be Zend\Db\Table\Table object');
-        }
-       
-        $this->roleAdapter = $roleAdapter;
-        $this->initRoles();
-        $this->initResources();
-        $this->initPrivileges();
+    /**
+     * Organise ACLs from the database
+     * 
+     * @param \Zend\Db\Adapter\Adapter $adapter   
+     */
+    public function __construct(InfosysproLib $company) {
+        
+        $this->acl = new ZendAcl();
+	$this->roleAdapter = new AclAdapter($company->getAdapter());
+        
+        //check  if user is authenticated
+        $this->initRoles(); // get rolese order does matter
+        $this->initResources(); //ge resources assigned to those roles
+        $this->initPrivileges(); // Get the view, edit, create etc
         /* By default admins have full access to everything */
-        $this->acl->addRole('administrator');
-        $this->acl->allow('administrator');        
+        //$this->acl->addRole('superAdmins');
+       // $this->acl->allow('superAdmins');    
+    $company->getSession()->setKey('acl', $this);
+    
+        
     }
 
     public function isAllowed($group, $resource, $privilege) {
@@ -77,10 +82,10 @@ class AclManager {
 
    
     protected function initRoles() {
-        $roles = $this->roleAdapter->getAclRoles();
-        foreach ($roles as $key => $role) {
+        $roles = $this->roleAdapter->getAclRoles();       
+        foreach ($roles as $key => $role) {            
             if (isset($role['parent'])) {
-                $parent = '';
+                $parent = null;
                 if (!$this->acl->hasRole($role['parent'])) {
                     // if parent hasn't been created in memory, do so
                     $parent = $role['parent'];
@@ -97,13 +102,16 @@ class AclManager {
     }
 
     protected function initResources() {
-        $resources = $this->roleAdapter->getAclResources();
+        $resources = $this->roleAdapter->getAclResources();   
+        var_dump($resources);
         foreach ($resources as $key => $resource) {
             if (isset($resource['parent'])) {
-                $parent = '';
+                $parent = null;
                 if (!$this->acl->hasResource($resource['name'])) {
                     $parent = $resource['parent'];
-                    $this->acl->addResource($parent);
+                     if (!$this->acl->hasResource($resource['parent'])) {
+                            $this->acl->addResource($parent);
+                     }
                 } else {
                     $parent = $this->acl->getResource($resource['name']);
                 }

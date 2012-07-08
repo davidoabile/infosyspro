@@ -191,6 +191,7 @@ class Container extends ArrayObject
     {
         $storage = $this->getStorage();
         $name    = $this->getName();
+       
         if (!isset($storage[$name])) {
             if (!$createContainer) {
                 return;
@@ -200,6 +201,7 @@ class Container extends ArrayObject
         if (!is_array($storage[$name]) && !$storage[$name] instanceof ArrayObject) {
             throw new Exception\RuntimeException('Container cannot write to storage due to type mismatch');
         }
+        // var_dump($storage); exit;
         return $storage;
     }
 
@@ -390,12 +392,14 @@ class Container extends ArrayObject
      */
     public function offsetExists($key)
     {
+     
         // If no container exists, we can't inspect it
         if (null === ($storage = $this->verifyNamespace(false))) {
             return false;
         }
+      
         $name    = $this->getName();
-
+//var_dump($storage[$name]); exit;
         // Return early if the key isn't set
         if (!isset($storage[$name][$key])) {
             return false;

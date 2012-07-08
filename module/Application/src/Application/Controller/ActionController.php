@@ -142,7 +142,8 @@ abstract class ActionController extends ZendActionController
 	$this->layoutParams['currentlang'] = $this->layoutParams['lang']->getLocale () ;
 	$tempSetUp = new Layout ( $this->layoutParams['template'] ) ;
 	//$this->setUp = $tempSetUp->toArray(); 
-	$this->layoutParams['setUp'] = $tempSetUp->toArray () ;
+	$this->layout()->setUp = $tempSetUp->toArray () ;
+	//$this->layout()->menuid = $this->menuid;
 	$this->init () ;
     }
 

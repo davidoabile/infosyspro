@@ -27,7 +27,7 @@
 
 namespace Infosyspro\Session;
 
-use Zend\Session\SessionManager as ZendSessionManager;
+use Zend\Session\Container as ZendSessionManager;
 
 /**
  * Class for dealing with sessions.
@@ -44,19 +44,21 @@ use Zend\Session\SessionManager as ZendSessionManager;
 class SessionManager extends ZendSessionManager
 {
     
-    public function setKey($key, $message) {
+    public function setKey($key, $value) {
        
-       $this->storage->setMetadata($key, $message);
+       return $this->offsetSet($key, $value);
       
     }
     
   
     public function getKey($key = null) 
     {
-        return $this->storage->getMetadata($key);
+         $storage = $this->getStorage();
+       var_dump($_SESSION); exit;
+        return $this->offsetGet($key);
     }
     
-    public function removeKey($key)
+    public function offsetUnset($key)
     {
          $this->storage->setMetadata($key,null);
     }

@@ -73,7 +73,8 @@ class Module {
                      return new \Infosyspro\Config\ModuleConfig( $sm->get('db-adapter') );
                  },
                  'session' => function ($sm) {
-                     $session = new \Infosyspro\Session\SessionManager ();
+                     $session = new \Infosyspro\Session\SessionManager ('infosysApp');
+                    // $session->setName('infosysApp');               
                      return $session;
                  }
             ),
@@ -99,8 +100,8 @@ class Module {
         $basePath = $app->getRequest()->getBasePath();
         $sm = $app->getServiceManager();
         $sessionManager = $sm->get('session');
-        $sessionManager->setName('infosysApp');
-        $sessionManager->start();
+       // $sessionManager->setName('infosysApp');
+        // $sessionManager->start();
         $view = $sm->get('viewrenderer');
         $view->plugin('basePath')->setBasePath($basePath);
         $device = new Mobile();
