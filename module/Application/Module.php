@@ -99,7 +99,7 @@ class Module {
         $app = $e->getApplication();
         $basePath = $app->getRequest()->getBasePath();
         $sm = $app->getServiceManager();
-        $sessionManager = $sm->get('session');
+       // $sessionManager = $sm->get('session');
        // $sessionManager->setName('infosysApp');
         // $sessionManager->start();
         $view = $sm->get('viewrenderer');

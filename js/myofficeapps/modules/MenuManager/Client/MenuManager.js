@@ -29,12 +29,14 @@ Ext.define('MyDesktop.Modules.MenuManager.Client.MenuManager', {
     'Ext.ux.layout.Center'
     ],
     id : 'menuManager',
-
+    menuFormSideBar: null,
+    gridWindow: null,
+    
     init : function(){
         var me = this;
         //
         // This is the main layout definition.
-
+        
         this.launcher = {
             text: 'Menu Manager',											// 3.- The name of the shortcut aka launcher/
             iconCls:'icon-admin',									// 4.- Changes the icon of the module
@@ -106,14 +108,17 @@ Ext.define('MyDesktop.Modules.MenuManager.Client.MenuManager', {
             id : 'GridTree', 
             model : 'MenuGroupsModel',
             autoLoad: true,
+            appendId: false, 
+            pageSize: 20,
             proxy : {
-                type: 'ajax',
-                url: '/myofficeapps/api',
-                method:'GET',
-                extraParams: { 
-                    object: 'Menu_ListGridMenu'
-                    
-                },	
+                type: 'rest',
+               
+            api: {
+                    read: '/myofficeapps/api?object=Menu_ListGridMenu',
+                    create: '/myofficeapps/api?object=Menu_CreateTree',
+                    update: '/myofficeapps/api?object=Menu_UpdateNode',
+                    destroy: '/myofficeapps/api?object=Menu_DeleteNode'
+                },
                 reader: {
                     type : 'json',
                     root : 'data',
@@ -143,10 +148,11 @@ Ext.define('MyDesktop.Modules.MenuManager.Client.MenuManager', {
             //  title: 'Website Menus',
             region:'north',
             // split: true,
-            height: 300,
+            height: 373,
             minSize: 150,
             rootVisible: false,
             autoScroll: true,
+           // singleExpand : true,
             store: this.store,
             viewConfig: {
                 plugins: {
@@ -300,213 +306,11 @@ Ext.define('MyDesktop.Modules.MenuManager.Client.MenuManager', {
         if(!win){
             var winWidth = 960; //desktop.getWinWidth() / 1.1;
             var winHeight = 500;
-           
-            me.utoolbarContainer =  Ext.create('Ext.toolbar.Toolbar', {
-                flex   : 1,
-                id: 'upper-main-toolbar',
-                autoDestroy: true,
-                doc: 'top',
-
-                items: [
-                {
-                    xtype: 'buttongroup',
-                    height: 69,
-                    fex:1,
-                    title: 'Manage',
-                    id: 'firstbutton',
-                    columns: 3,
-                    items: [
-                    {
-                        xtype: 'button',
-                        id: 'home',
-                        text: 'View List'
-                    // handler: this.createArticleOne
-                    },
-                    {
-                        xtype: 'button',
-                        text: 'New Content',
-                        scope: this
-                    // handler: this.createArticleOne
-
-                    },
-
-
-                    {
-                        xtype: 'button',
-                        text: 'Open List',
-                        scope: this
-                    // handler: this.getGridWindow
-
-                    },
-                    ]
-                },
-                {
-                    xtype: 'buttongroup',
-                    height: 69,
-                    flex:1,
-                    title: 'Manage List',
-                    id: 'manage-list',
-                    columns: 3,
-                    items: [
-                    {
-                        xtype: 'button',
-                        id: 'delete-list',
-                        text: 'Delete Local',
-                        scope: this,
-                        handler: function(){
-                            var selection = Ext.getCmp('article-grid-window').getView().getSelectionModel().getSelection()[0];
-                            if (selection) {
-                                this.articleStore.remove(selection);
-
-                            } else {
-                                this.desktop.showNotification({
-                                    html: 'No selection made',
-                                    title: 'Make Selection'
-                                })
-                            }
-                        }
-                    },
-                    {
-                        xtype: 'button',
-                        id: 'edit-selected',
-                        text: 'Edit Selected',
-                        scope: this,
-                        handler: function(){
-                            var me = this;
-                            var selection = Ext.getCmp('article-grid-window').getView().getSelectionModel().getSelection()[0];
-                            if (selection) {
-                                var theForm = me.createArticleOne();
-                                this.desktop.showNotification({
-                                    html: 'Please wait..',
-                                    title: 'Loading'
-                                });
-                                //  theForm = Ext.getCmp('form-article').getForm();
-                           
-                                theForm.load({
-                                    url: '/myofficeapps/edit',
-                                    params: {
-                                        id: selection.get('id')
-                                    },
-                                    failure: function(form, action) {
-                                        Ext.Msg.alert("Loading failed", action.result.errorMessage);
-                                    }
-                                });
-                            } else {
-                                this.desktop.showNotification({
-                                    html: 'No selection made',
-                                    title: 'Make Selection'
-                                })
-                            }
-                        }
-
-                    },{
-                        xtype: 'button',
-                        text: 'Save Changes',
-                        id: 'save-changes',
-                        scope: this,
-                        handler: function(){
-                            var selection = Ext.getCmp('article-grid-window').getView().getSelectionModel().getSelection()[0];
-                            this.articleStore.sync();
-                        }
-
-                    },
-                    ]
-                },{
-                    xtype: 'buttongroup',
-                    height: 69,
-                    flex: 1,
-                    title: 'Form Manager',
-                    id: 'form-manager',                
-                    columns: 3,
-                    items: [
-                    {
-                        xtype: 'button',
-                        text: 'Save New',
-                        scope: this,
-                        handler: function() {
-                            var form = Ext.getCmp('form-article').getForm();
-
-                            if (form.isValid()) {
-                                this.desktop.showNotification({
-                                    html: 'Saving Data! Please wait ...',
-                                    title: 'Saving Data'
-                                });
-                           
-                                if (form.isValid()) { // make sure the form contains valid data before submitting
-
-                                    form.submit({
-                                        success: function(form, action) {                                      
-                                            this.desktop.showNotification({
-                                                html: action.result.msg.message,
-                                                title: 'Save Successfully'
-                                            })
-                                        },
-                                        failure: function(form, action) {
-                                            Ext.MessageBox.show({
-                                                title: 'Failed Saving data',
-                                                msg: action.result.msg.message,
-                                                icon: action.result.msg.type
-                                            });
-                                        }
-                                    });
-                                } else { // display error alert if the data is invalid
-                                    Ext.Msg.alert('Invalid Data', 'Please correct form errors.')
-                                }
-                       
-                            }
-                        }
-                    },
-                    {
-                        xtype: 'button',
-                        text: 'Close'
-
-                    },
-                    {
-                        xtype: 'button',
-                        text: 'Refresh',
-                        handler: function(){
-                            //return this.CreateNew(desktop);
-                            var theForm = Ext.getCmp('form-article').getForm().load({
-                                url: '/myofficeapps/edit',
-                                params: {
-                                    id: 1
-                                },
-                                failure: function(form, action) {
-                                    Ext.Msg.alert("Load failed", action.result.errorMessage);
-                                }
-                            });
-                        }
-                    //scope: this
-                    }
-                    ]
-                },
-                {
-                    xtype: 'buttongroup',
-                    height: 69,
-                    flex: 1,
-                    title: 'Help',
-                    columns: 2,
-                    items: [
-                    {
-                        xtype: 'button',
-                        flex: 2,
-                        text: 'Local Help'
-                    },
-                    {
-                        xtype: 'button',
-                        flex:2,
-                        text: 'Online Help'
-                    }
-                    ]
-                }
-                ]
-
-            });
-            var form = Ext.widget('form', {
-                
+    var formSettings = Ext.widget('form', {                
                 border: false,
                 bodyPadding: 10,
-                id: 'form-menu-options',
+                //renderTo: 'menu-settings',
+                id: 'form-settings',
                 fieldDefaults: {
                     labelAlign: 'top',
                     labelWidth: 100                   
@@ -630,7 +434,7 @@ Ext.define('MyDesktop.Modules.MenuManager.Client.MenuManager', {
                         },
                         {
                             xtype: 'radiofield',
-                            name: 'params[sss]',
+                            name: 'params[ssl]',
                             inputValue: 0,
                             boxLabel: 'No',
                             checked: true
@@ -639,16 +443,100 @@ Ext.define('MyDesktop.Modules.MenuManager.Client.MenuManager', {
                     }
                     ]
                     }]
-            })
-       
-            var tool = Ext.create('Ext.PagingToolbar', {
-                border: false,
-                id: 'grid-toolbar',
+            });
+            me.utoolbarContainer =  Ext.create('Ext.toolbar.Toolbar', {
+                flex   : 1,
+                scope: this,
+                id: 'upper-main-toolbar',
                 autoDestroy: true,
-                store: me.gridTree,   // same store GridPanel is using                   
-                displayInfo: true
-            //renderTo: 'bottom-main-toolbar'           
-            }) ;
+                doc: 'top',
+                
+                items: [{
+            xtype:'buttongroup',
+             flex: 1,
+            items: [{
+                text: 'View',
+                 flex: 1,
+                iconCls: 'task-add-new',
+                scale: 'large',
+                menu: [{text: 'Paste Menu Item', iconCls: 'task-add-new'}]
+            }]
+        },{
+            xtype:'buttongroup',
+             flex: 1,
+             id: 'add-new',
+            items: [{
+                text: 'New',
+                iconCls: 'admin-help-32',
+                scale: 'large',
+                scope: this,
+                handler: this.addNew
+            }]
+        },{
+            xtype:'buttongroup',
+             flex: 1,
+            items: [{
+                text: 'Edit',
+                iconCls: 'admin-help-32',
+                scale: 'large'
+            }]
+        },{
+            xtype:'buttongroup',
+             flex: 1,
+            items: [{
+                text: 'Trash',
+                iconCls: 'admin-help-32',
+                scale: 'large'
+            }]
+        },{
+            xtype:'buttongroup',
+             flex: 1,
+            items: [{
+                text: 'Save',
+                iconCls: 'admin-help-32',
+                scale: 'large',
+                scope: this,
+                handler: this.saveMenu
+            }]
+        },{
+            xtype:'buttongroup',
+             flex: 1,
+            items: [{
+                text: 'Cancel',
+                id: 'cancel',
+                disabled: true,
+                iconCls: 'admin-help-32',
+                scale: 'large'
+            }]
+        },{
+            xtype:'buttongroup',
+            flex: 1,
+            items: [{
+                text: 'Preview',
+                iconCls: 'help-32',
+                scale: 'large'
+            }]
+        },{
+            xtype:'buttongroup',
+             flex: 1,
+            items: [{
+                text: 'View Security',               
+                scale: 'large'
+            }]
+        }, {
+            xtype:'buttongroup',
+             flex: 1,
+            items: [{
+                text: 'Help',
+                iconCls: 'admin-help-32',
+                scale: 'large'
+            }]
+        }]
+
+            });
+           
+       
+            
        
             win = desktop.createWindow({
                 id: 'menuManager',
@@ -678,10 +566,10 @@ Ext.define('MyDesktop.Modules.MenuManager.Client.MenuManager', {
                     {
                         id: 'details-panel',
                         title: 'Quick Tips',
-                        region: 'center',
-                        bodyStyle: 'padding-bottom:15px;background:#eee;',
+                        region: 'south',
+                        bodyStyle: 'padding-bottom:5px;background:#eee;',
                         autoScroll: true,
-                        html: '<p class="details-info">When you select a layout from the tree, additional details will display here.</p>'
+                        html: '<p class="details-info">Before creating a new menu, you should have created a page to link to.<br /><br /> Click on view then  Content Manager to create one</p>'
                     }]
                 },{
                                
@@ -689,93 +577,38 @@ Ext.define('MyDesktop.Modules.MenuManager.Client.MenuManager', {
                     region: 'center', // this is what makes this panel into a region within the containing layout
                     layout: 'card',
                     margins: '2 0 5 0',
-                    activeItem: 0,
-                    border: false,
-                    items: [{
-                        title: 'Website Menu Details',
-                        xtype: 'grid',
-                        layout: 'fit',
-                        //  selType: 'cellmodel',
-                        plugins: [
-                        Ext.create('Ext.grid.plugin.CellEditing', {
-                            clicksToEdit: 2
-                        })
-                        ],
-                        viewConfig: {
-                            plugins: [{
-                                ptype: 'gridviewdragdrop' 
-                            //  dropGroup: 'treeDDGroup',
-                            // enableDrag: true
-          
-                            }
-                            ],
-                            listeners: {                                
-                                drop: {
-                                    fn: me.onTreedragdroppluginDrop,
-                                    scope: me
-                                }
-                            }
-                        },
-                        store: me.gridTree,
-                        bbar : tool,
-                        columns: [
-                        {
-                            text     : 'Title',
-                            flex     : 1,
-                            sortable : false, 
-                            dataIndex: 'title',
-                            editor: 'textfield'
-                        },
-                        {
-                            text     : 'Alias', 
-                            width    : 75, 
-                            sortable : false,                             
-                            dataIndex: 'alias',
-                            editor: 'textfield'
-                        },
-                        {
-                            text     : 'Note', 
-                            width    : 75, 
-                            sortable : true, 
-                            // renderer : change, 
-                            dataIndex: 'note'
-                        },
-                        {
-                            text     : 'Approved', 
-                            width    : 75, 
-                            sortable : false, 
-                            // renderer : pctChange, 
-                            dataIndex: 'approved'
-                        },
-                        {
-                            text     : 'Access Group', 
-                            width    : 85, 
-                            sortable : true, 
-                            // renderer : Ext.util.Format.dateRenderer('m/d/Y'), 
-                            dataIndex: 'access'
-                        }
-                        ],
-                        stripeRows: true
-                    }]
+                   // activeItem: 0,
+                    border: false
                 },
 
                 {
                     region:'east',
                     autoScroll:true,
                     collapsible:true,
+                    collapsed: true,
                     cmargins: '0 0 0 0',
                     margins: '2 0 5 0',
                     split:true,
-                    title: 'Menu Settings',					
+                    title: 'Menu Settings',
+                    id: 'menu-settings',
                     elements:'body',
                     width:parseFloat(winWidth*0.3) < 211 ? parseFloat(winWidth*0.3) : 210,
-                    items: form
+                    items: formSettings
+                   
                 }],
                 renderTo: Ext.getBody()
             //taskbuttonTooltip: '<b>Layout Window</b><br />A window with a layout'
             });
         }
+        //var panel = Ext.getCmp('menu-settings');
+        //panel.add(getSideForm());
+       var  panel = Ext.getCmp('content-panel');
+        panel.add(this.getGridWindow());
         win.show();
+        
+        //panel.collapse();
+        //panel.getLayout().regions.north.expand();
+
         return win;
     },
     onTreedragdroppluginDrop: function (node, list, overList, position)
@@ -817,7 +650,10 @@ Ext.define('MyDesktop.Modules.MenuManager.Client.MenuManager', {
     {
         var me = this;
         me.selectedNode = me.treePanel.getSelectionModel().getSelection();
-        // console.log(me.selectedNode[0].data['id']);
+        var isleaf = me.selectedNode[0].data['leaf'];
+         console.log(me.selectedNode[0].data);
+         
+         return false;
         Ext.Ajax.request({
             url: '/myofficeapps/api',
             method: 'DELETE',
@@ -847,6 +683,157 @@ Ext.define('MyDesktop.Modules.MenuManager.Client.MenuManager', {
             }
         });
         // refresh the lists view so the task counts will be updated.
-        me.treePanel.getView().refresh(); 
+        this.treePanel.getView().refresh(); 
+    },
+    addNew: function() {
+        var panel;
+        panel = Ext.getCmp('grid-tree');
+         if( panel)  panel.destroy();
+       
+        
+      //  Ext.getCmp('form-manager').enable();
+        Ext.getCmp('add-new').disable();
+         panel = Ext.getCmp('layout-browser');
+       panel.collapse();
+       
+       
+       
+        //panel.getLayout().regions.north.expand();
+        
+       
+      //  panel2.body.dom.innerHTML='';
+        var formSettings = Ext.create('Ext.form.Panel', { 
+             layout: {
+                type: 'fit'
+            },
+                title: 'Edit New Menu',
+                bodyPadding: 10,
+               // renderTo: 'content-panel',
+                id: 'form-main-settings',
+                fieldDefaults: {
+                    labelAlign: 'top',
+                    labelWidth: 100                   
+                },
+                defaults: {
+                    margins: '0 0 10 0'
+                },
+                
+                items: [
+                {
+                    xtype: 'fieldset',
+                    padding: 7,
+                    collapsible:true,                        
+                    title: 'Link Options',
+                    items: [
+                                
+                    {
+                        xtype: 'textfield',
+                        id: 'links-style',
+                        name: 'params[linkCSS]',
+                        fieldLabel: 'Css Style'
+                    },
+                    {
+                        xtype: 'textfield',
+                        id: 'linkimage',
+                        name: 'params[linkImages]' ,
+                        fieldLabel: 'Menu Icon'
+                    }
+                    ]
+                }]
+            });
+       // 
+       //formSettings.show();
+       //return formSettings;
+        panel = Ext.getCmp('content-panel');
+        panel.add(formSettings);
+   
+       
+       //panel.doLayout();
+        //panel = Ext.getCmp('menu-settings');
+        //  panel.expand();
+     
+    },
+    saveMenu: function() {
+        
+    },
+    getGridWindow: function() {
+        var tool = Ext.create('Ext.PagingToolbar', {
+                border: false,
+                id: 'grid-toolbar',
+                autoDestroy: true,
+                store: this.gridTree,   // same store GridPanel is using                   
+                displayInfo: true
+            //renderTo: 'bottom-main-toolbar'           
+            }) ;
+            
+       var  gridWindow =  Ext.create('Ext.grid.Panel', {   
+                        xtype: 'grid',
+                        layout: 'fit',
+                        id: 'grid-tree',
+                        renderTo: 'content-panel',
+                        //  selType: 'cellmodel',
+                      //  plugins: [
+                       // Ext.create('Ext.grid.plugin.CellEditing', {
+                        //    clicksToEdit: 2
+                       // })
+                       // ],
+                        viewConfig: {
+                            plugins: [{
+                                ptype: 'gridviewdragdrop' 
+                            //  dropGroup: 'treeDDGroup',
+                            // enableDrag: true
+          
+                            }
+                            ],
+                            listeners: {                                
+                                drop: {
+                                    fn: this.onTreedragdroppluginDrop,
+                                    scope: this
+                                }
+                            }
+                        },
+                        store: this.gridTree,
+                        bbar : tool,
+                        columns: [
+                        {
+                            text     : 'Title',
+                            flex     : 1,
+                            sortable : false, 
+                            dataIndex: 'title',
+                            editor: 'textfield'
+                        },
+                        {
+                            text     : 'Internal Url', 
+                            flex    : 1, 
+                            sortable : false,                             
+                            dataIndex: 'alias',
+                            editor: 'textfield'
+                        },
+                        {
+                            text     : 'External Url', 
+                            flex    : 1, 
+                            sortable : false,                             
+                            dataIndex: 'note',
+                            editor: 'textfield'
+                        },
+                        {
+                            text     : 'Active', 
+                            width    : 45, 
+                            sortable : false, 
+                            // renderer : pctChange, 
+                            dataIndex: 'approved'
+                        },
+                        {
+                            text     : 'Access', 
+                            width    : 45, 
+                            sortable : false, 
+                            // renderer : Ext.util.Format.dateRenderer('m/d/Y'), 
+                            dataIndex: 'access'
+                        }
+                        ],
+                        stripeRows: true
+       });
+       
+       return gridWindow;
     }
 });

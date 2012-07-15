@@ -1,0 +1,56 @@
+/*
+ * Icon styles
+ */
+.tasks-new {
+    background: url('images/new.png') no-repeat;
+}
+.tasks-new-folder {
+    background-image: url('images/new_folder.png');
+}
+.tasks-new-list {
+    background-image: url('images/new_list.png');
+}
+.tasks-delete-task {
+    background-image: url('images/delete_task.png');
+}
+.tasks-delete-list {
+    background-image: url('images/delete_list.png');
+}
+.tasks-delete-folder {
+    background-image: url('images/delete_folder.png');
+}
+
+#details-panel h2 {
+    padding:10px 10px 0;
+    font-size:12px;
+    color:#15428B;
+}
+#details-panel p {
+    padding:10px 10px 0;
+}
+#details-panel pre {
+    border-top:1px dotted #ddd;
+    border-bottom:1px dotted #ddd;
+    margin-top:10px;
+    padding:0 5px;
+    background:#f5f5f5;
+}
+#details-panel .details-info {
+    margin:5px;
+    padding:5px;
+    border:1px dotted #999;
+    color:#555;
+    background: #f9f9f9;
+}
+
+.x-grid-row-selected .x-grid-cell{
+     background-color: #DFE8F6 !important;
+     background-image: none !important;
+}  
+
+.trash-32 {
+    background: url('/jsfrw/myofficeapps/images/trash-empty-32.png') no-repeat;
+}
+.admin-help-32 {
+    background: url('/jsfrw/myofficeapps/images/admin-help-32.png') no-repeat;
+}

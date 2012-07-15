@@ -59,6 +59,7 @@ Ext.define('MyDesktop.Modules.ArticlesWindow.Client.ArticlesWindow', {
         this.articleStore =   Ext.create('Ext.data.Store', {
             model: 'MyDesktop.Modules.ArticlesWindow.Client.Models.Articles',
             autoLoad: false,
+            appendId: false,
             pageSize: 20,
             remoteSort: true,          
             proxy: {

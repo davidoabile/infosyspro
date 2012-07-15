@@ -37,7 +37,7 @@ class MyofficeappsController extends ActionController {
 
     public function indexAction() {
 
-        return ;  
+        return new \Zend\View\Model\ViewModel(array());
     }
 
    
@@ -165,35 +165,27 @@ class MyofficeappsController extends ActionController {
      * @return mixed
      */
     public function update($id, $data) {
-        if(isset($data['jsonp'])) {
-            $queryData = json_decode($data['jsonp'], true);           
-            $id = $queryData[0]['id']; // Just a dummy won't be used in case we are using a batch
-        }
-       
-        if ($id  < 0 ) {
-            echo $this->output;
-        } else {
-            //Expects a name spaced method CLASSNAME 
-
-            if (!empty($data['object'])) {
+	
+	 $proxy = $data['object'];
+	 var_dump($proxy); exit;
+	if (!empty($data['object'])) {
+	    unset($data['object']);
+	    $params = array_keys($data);
                 $result = null;
 
-                $classMethod = explode('_', $data['object']);
+                $classMethod = explode('_', $proxy);
 
                 $object = 'get' . $classMethod[0];
 
-                if (method_exists($this->company, $object)) {
-                    unset($data['object']);
-                    $queryData['method'] = lcfirst($classMethod[1]);
-
-                    $result = $this->company->$object()->update($id, $queryData);
+                if (method_exists($this->company, $object)) {                 
+                    $params['method'] = lcfirst($classMethod[1]);
+                    $result = $this->company->$object()->update($id, $params);
                 }
 
                 return $this->_response($result);
             } 
-        }
-      
-        return $this->getResponse();
+	
+        return $this->_response();
     }
 
     /**

@@ -220,7 +220,8 @@ abstract class RestfulController implements
                         }
                     }
                     $content = $request->getContent();
-                    parse_str($content, $parsedParams);
+                    parse_str($content, $parsedParams);	
+var_dump($request->query()->getParams()); exit;		    
                     $return = $this->update($id, $parsedParams);
                     break;
                 case 'delete':
