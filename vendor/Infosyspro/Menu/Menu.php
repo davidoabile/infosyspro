@@ -67,10 +67,14 @@ class Menu extends \Infosyspro\AbstractRestFul
 	$limit = (( int ) $query[ 'limit' ] > 0 ) ? $query[ 'limit' ] : 20 ;
 	$start = (( int ) $query[ 'start' ] > -1 ) ? $query[ 'start' ] : 0 ;
 	$order = ' ORDER BY ' . $query[ 'sort' ] . ' ' . $query[ 'dir' ] ;
+        if(isset($query['id'])) {
+	    $id = (int) $query['id'];
+	    $parent = array_pop( $this->_getQuery( 'SELECT lft,rgt FROM TbMenu WHERE id =' . $id )) ;
 
-	// $sql = $sql . $order . ' LIMIT ' . $start . ' , ' . $limit;
+            $sql = 'SELECT * FROM TbMenu WHERE lft >= ' . $parent['lft'] . ' AND rgt  <= ' . $parent['rgt'] . ' AND leaf = 1  ORDER BY lft asc' ;
+        } else $sql ='SELECT * FROM TbMenu WHERE parentId = 1 AND leaf = 1 ORDER BY lft asc' ;
 	//echo $sql; exit;
-	return $this->_getQuery( 'SELECT * FROM TbMenu WHERE parentId = 1 AND leaf = 1 ORDER BY lft asc' ) ;
+	return $this->_getQuery( $sql ) ;
     }
 
     public function createTree ( $data )
